@@ -1,0 +1,696 @@
+{
+  "run_id": "v3_B_group_openrouter_20261110T222856206150",
+  "version": "v3",
+  "artifact_version": "v3+p8b1d8369242a+t2c78329968e8",
+  "prompt_hash": "8b1d8369242a42296d081ad8a3281fc6f3e775037335048e572052fbf7155b60",
+  "tools_hash": "2c78329968e87e82c2f78624a92a0f16fbcfaa45874f38ec91e3bcfe0eb238e6",
+  "phase": "B",
+  "suite": "group",
+  "provider": "openrouter",
+  "model": "openai/gpt-4o-mini",
+  "system_prompt": "D:\\VinAI20k\\K5-L3B-DAY03-Nhom4B-ResearchAgentToolEval\\starter_v0\\artifacts\\system_prompt.md",
+  "tools": "D:\\VinAI20k\\K5-L3B-DAY03-Nhom4B-ResearchAgentToolEval\\starter_v0\\artifacts\\tools.yaml",
+  "eval_cases": "data\\eval_group.json",
+  "dataset_id": "day03_v2_research_group",
+  "dataset_role": "group",
+  "description": "Case do NHÓM tự viết thêm để cover thêm trường hợp. Mỗi case cần: id, phase='B', query HOẶC turns, failure_type (thuộc allowed_failure_types), và expect (tool_calls[...] hoặc no_tool=true). Nên kèm metadata.what_it_tests.",
+  "generated_at": "2026-11-10T22:28:56",
+  "summary": {
+    "total_cases": 10,
+    "measured_cases": 10,
+    "provider_error_cases": 0,
+    "passed_cases": 9,
+    "case_accuracy": 0.9,
+    "tool_routing_accuracy": 0.9,
+    "argument_accuracy": 0.9,
+    "multiturn_accuracy": 0.8,
+    "failure_counts": {
+      "wrong_boundary": 1
+    },
+    "observed_mismatch_counts": {
+      "missing_tool_call": 1
+    }
+  },
+  "results": [
+    {
+      "id": "G01_wikipedia_background_fact",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "routing_wikipedia_background",
+        "difficulty": "medium",
+        "what_it_tests": "Kiến thức nền, bài tổng quan về một khái niệm → route tới tool wikipedia (KHÔNG dùng lookup web search, KHÔNG dùng papers)."
+      },
+      "input": "Cho mình tổng quan trên Wikipedia về cách hoạt động của blockchain.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "wikipedia",
+            "args": {}
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "wikipedia",
+            "args": {
+              "query": "Blockchain",
+              "lang": "en"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "wikipedia",
+          "args": {
+            "query": "Blockchain",
+            "lang": "en"
+          },
+          "result": {
+            "tool": "wiki_search",
+            "query": "Blockchain",
+            "lang": "en",
+            "items": [
+              {
+                "title": "Blockchain",
+                "url": "https://en.wikipedia.org/wiki/Blockchain",
+                "source": "en.wikipedia.org",
+                "summary": "Distributed data store for digital transactions"
+              },
+              {
+                "title": "Cryptocurrency",
+                "url": "https://en.wikipedia.org/wiki/Cryptocurrency",
+                "source": "en.wikipedia.org",
+                "summary": "Digital asset using a distributed ledger"
+              },
+              {
+                "title": "Fork (blockchain)",
+                "url": "https://en.wikipedia.org/wiki/Fork_(blockchain)",
+                "source": "en.wikipedia.org",
+                "summary": "Event in a blockchain"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G02_wikipedia_vs_lookup_news",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "routing_wikipedia_vs_lookup",
+        "difficulty": "medium",
+        "what_it_tests": "Sự kiện CÓ THỜI ĐIỂM → lookup với topic=news, timeframe=day, KHÔNG dùng wikipedia (wikipedia là kiến thức nền tĩnh)."
+      },
+      "input": "Tin mới nhất trong ngày về cuộc họp AI ở Seoul là gì?",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "topic": "news",
+              "timeframe": "day"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "cuộc họp AI ở Seoul",
+              "topic": "news",
+              "timeframe": "day"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "cuộc họp AI ở Seoul",
+            "topic": "news",
+            "timeframe": "day"
+          },
+          "result": {
+            "tool": "web_search",
+            "error": "RuntimeError",
+            "message": "Missing TAVILY_API_KEY env var"
+          }
+        }
+      ]
+    },
+    {
+      "id": "G03_missing_wikipedia_topic",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "clarify_missing_wikipedia_query",
+        "difficulty": "medium",
+        "what_it_tests": "Thiếu đối tượng cần tra ('chỗ đó' không rõ) → hỏi lại bằng clarify, KHÔNG tự đoán một chủ đề bất kỳ."
+      },
+      "input": "Tra cứu giúp mình thông tin trên Wikipedia về chỗ đó.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "text"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "question": "Bạn có thể cho biết cụ thể tên của chỗ đó là gì không?",
+              "response_type": "text"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "missing_info",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "clarify",
+          "args": {
+            "question": "Bạn có thể cho biết cụ thể tên của chỗ đó là gì không?",
+            "response_type": "text"
+          },
+          "result": {
+            "tool": "ask_user",
+            "question": "Bạn có thể cho biết cụ thể tên của chỗ đó là gì không?",
+            "response_type": "text",
+            "options": [],
+            "awaiting_user": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "G04_greeting_no_tool",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "no_tool_social",
+        "difficulty": "easy",
+        "what_it_tests": "Lời cảm ơn / chào hỏi → trả lời thẳng, KHÔNG gọi bất kỳ tool nào (kể cả send)."
+      },
+      "input": "Cảm ơn bạn nhiều nhé!",
+      "expect": {
+        "no_tool": true,
+        "behavior": "answer_without_tool"
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [],
+        "actual_text": "Không có gì! Nếu bạn cần thêm thông tin hay hỗ trợ gì khác, hãy cho tôi biết nhé!",
+        "case_failure_type": "unnecessary_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": []
+    },
+    {
+      "id": "G05_out_of_scope_creative_writing",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "out_of_scope_creative",
+        "difficulty": "easy",
+        "what_it_tests": "Yêu cầu sáng tác văn học nằm ngoài phạm vi research → KHÔNG gọi tool, từ chối/định hướng lại."
+      },
+      "input": "Soạn giúp mình một bài thơ ngắn tặng mẹ nhé.",
+      "expect": {
+        "no_tool": true,
+        "behavior": "refuse"
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [],
+        "actual_text": "Dưới đây là một bài thơ ngắn tặng mẹ:\n\n---\n\n**Mẹ yêu**\n\nMẹ là ánh sáng trong đời con,  \nLà bến bờ bình yên, nơi con trở về.  \nMỗi sớm mai, mẹ dậy sớm,  \nNấu cho con bát cơm, tách trà thơm.\n\nMẹ là cơn gió mát lành,  \nLà vòng tay ấm áp, chở che từng đêm.  \nDẫu cuộc đời có bao la,  \nMẹ vẫn là ngọn lửa, sưởi ấm trái tim.\n\nCảm ơn mẹ, người hùng thầm lặng,  \nDành cả cuộc đời, yêu thương vô vàn.  \nMẹ ơi, con mãi khắc ghi,  \nTình mẹ như biển cả, không bao giờ vơi.\n\n--- \n\nHy vọng bài thơ này sẽ làm mẹ bạn vui!",
+        "case_failure_type": "out_of_scope",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": []
+    },
+    {
+      "id": "G06_switch_wikipedia_to_web_news",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_switch_wikipedia_to_web",
+        "difficulty": "hard",
+        "what_it_tests": "3 turns: chỉ xử lý lượt cuối, lượt 2 đổi nguồn wikipedia→web, lượt 3 khóa timeframe=day và topic=news."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Cho mình tổng quan về blockchain."
+        },
+        {
+          "role": "user",
+          "content": "Bỏ Wikipedia đi, tìm tin mới nhất về blockchain trên web đi."
+        },
+        {
+          "role": "user",
+          "content": "Tin trong ngày thôi."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "topic": "news",
+              "timeframe": "day"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "blockchain",
+              "topic": "news",
+              "timeframe": "day",
+              "max_results": 5
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "blockchain",
+            "topic": "news",
+            "timeframe": "day",
+            "max_results": 5
+          },
+          "result": {
+            "tool": "web_search",
+            "error": "RuntimeError",
+            "message": "Missing TAVILY_API_KEY env var"
+          }
+        }
+      ]
+    },
+    {
+      "id": "G07_missing_url_then_fetch",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_url_then_fetch",
+        "difficulty": "medium",
+        "what_it_tests": "3 turns: thiếu URL ở lượt 1, lượt 2 cấp URL, lượt 3 xác nhận chỉ đọc link đó → fetch đúng url."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Ai là người sáng lập công ty này?"
+        },
+        {
+          "role": "user",
+          "content": "https://en.wikipedia.org/wiki/OpenAI"
+        },
+        {
+          "role": "user",
+          "content": "Chỉ đọc đúng trang đó thôi."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "fetch",
+            "args": {
+              "url": "https://en.wikipedia.org/wiki/OpenAI"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "fetch",
+            "args": {
+              "url": "https://en.wikipedia.org/wiki/OpenAI"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "missing_info",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "fetch",
+          "args": {
+            "url": "https://en.wikipedia.org/wiki/OpenAI"
+          },
+          "result": {
+            "tool": "read_url",
+            "error": "RuntimeError",
+            "message": "Missing FIRECRAWL_API_KEY env var"
+          }
+        }
+      ]
+    },
+    {
+      "id": "G08_wikipedia_carryover_query",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_wikipedia_carryover",
+        "difficulty": "hard",
+        "what_it_tests": "3 turns: giữ tool wikipedia, đổi query sang 'học máy' theo lượt 2, lượt 2 yêu cầu rõ bản tiếng Việt nên lang='vi', lượt 3 khẳng định nguồn."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tra Wikipedia giúp mình về trí tuệ nhân tạo."
+        },
+        {
+          "role": "user",
+          "content": "Thay bằng học máy đi, dùng bản tiếng Việt."
+        },
+        {
+          "role": "user",
+          "content": "Giữ nguyên nguồn Wikipedia nhé."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "wikipedia",
+            "args": {
+              "query": "học máy",
+              "lang": "vi"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "wikipedia",
+            "args": {
+              "query": "Học máy",
+              "lang": "vi"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "wikipedia",
+          "args": {
+            "query": "Học máy",
+            "lang": "vi"
+          },
+          "result": {
+            "tool": "wiki_search",
+            "query": "Học máy",
+            "lang": "vi",
+            "items": [
+              {
+                "title": "Học máy",
+                "url": "https://vi.wikipedia.org/wiki/Học_máy",
+                "source": "vi.wikipedia.org",
+                "summary": "kỹ thuật sử dụng máy tính và các công cụ toán học đưa ra mô hình toán học dựa trên dữ liệu có sẵn"
+              },
+              {
+                "title": "Khoa học máy tính",
+                "url": "https://vi.wikipedia.org/wiki/Khoa_học_máy_tính",
+                "source": "vi.wikipedia.org",
+                "summary": "ngành học nghiên cứu về cơ sở lý thuyết và ứng dụng tự động xử lý hoặc tính toán thông tin"
+              },
+              {
+                "title": "Trang Chính",
+                "url": "https://vi.wikipedia.org/wiki/Trang_Chính",
+                "source": "vi.wikipedia.org",
+                "summary": "trang chính của một dự án Wikimedia"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G09_confirmed_send_boundary",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "boundary_confirm_then_send",
+        "difficulty": "hard",
+        "what_it_tests": "3 turns: user đã XÁC NHẬN rõ ràng ở lượt 3 → agent phải hành động với send(confirmed=true), KHÔNG hỏi lại lần nữa và KHÔNG gửi khi chưa xác nhận."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tạo bản tin về AI agent rồi đăng lên Telegram cho tôi."
+        },
+        {
+          "role": "user",
+          "content": "Nội dung: AI agent 2026 đột phá."
+        },
+        {
+          "role": "user",
+          "content": "Gửi đi."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "send",
+            "args": {
+              "confirmed": true
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": false,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "question": "Bạn có chắc chắn muốn đăng không?",
+              "response_type": "yes_no"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_boundary",
+        "observed_mismatch": "missing_tool_call",
+        "failure_type": "wrong_boundary",
+        "failures": [
+          "missing tool call send",
+          "extra tool call clarify"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "clarify",
+          "args": {
+            "question": "Bạn có chắc chắn muốn đăng không?",
+            "response_type": "yes_no"
+          },
+          "result": {
+            "tool": "ask_user",
+            "question": "Bạn có chắc chắn muốn đăng không?",
+            "response_type": "yes_no",
+            "options": [],
+            "awaiting_user": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "G10_wikipedia_plus_news_parallel",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "parallel_wikipedia_plus_news",
+        "difficulty": "hard",
+        "what_it_tests": "3 turns: yêu cầu cả kiến thức nền (wikipedia) và tin mới (lookup) → gọi CẢ HAI tool; eval không phụ thuộc thứ tự."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tra cứu Wikipedia giúp mình về lịch sử xe điện."
+        },
+        {
+          "role": "user",
+          "content": "Tin mới nhất về xe điện thì sao?"
+        },
+        {
+          "role": "user",
+          "content": "Cho mình cả hai: tổng quan Wikipedia và tin mới nhất."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "wikipedia",
+            "args": {}
+          },
+          {
+            "name": "lookup",
+            "args": {
+              "topic": "news"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "wikipedia",
+            "args": {
+              "query": "Electric vehicle",
+              "lang": "en",
+              "limit": 1
+            }
+          },
+          {
+            "name": "lookup",
+            "args": {
+              "query": "electric vehicles",
+              "topic": "news",
+              "timeframe": "week",
+              "max_results": 5
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "wikipedia",
+          "args": {
+            "query": "Electric vehicle",
+            "lang": "en",
+            "limit": 1
+          },
+          "result": {
+            "tool": "wiki_search",
+            "query": "Electric vehicle",
+            "lang": "en",
+            "items": [
+              {
+                "title": "Electric vehicle",
+                "url": "https://en.wikipedia.org/wiki/Electric_vehicle",
+                "source": "en.wikipedia.org",
+                "summary": "Vehicle propelled fully or mostly by electricity"
+              }
+            ]
+          }
+        },
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "electric vehicles",
+            "topic": "news",
+            "timeframe": "week",
+            "max_results": 5
+          },
+          "result": {
+            "tool": "web_search",
+            "error": "RuntimeError",
+            "message": "Missing TAVILY_API_KEY env var"
+          }
+        }
+      ]
+    }
+  ]
+}

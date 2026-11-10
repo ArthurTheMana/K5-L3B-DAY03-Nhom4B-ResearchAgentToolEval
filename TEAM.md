@@ -17,7 +17,7 @@
 |   1 | Vương Quang Thắng | 2A202603855 | vuongquangthang0311@gmail.com | vuongquangthang | Prompt & tool declaration — sửa `system_prompt.md` + `tools.yaml` qua v1→v3 |
 |   2 | Nguyễn Tài minh Huy | 2A202603828 |        |        | Nhóm trưởng — setup, chạy v0–v3, `version_log.csv`, gom bài |
 |   3 | Trần Thị Nhài | 2A202603911 | nhainhinhanh6a@gmail.com | `chanhochust` | Tool mới + unit test — `wikipedia` |
-|   4 | Vũ Văn Trường | 2A202603910 | tini.vu.0@gmail.com | `Sz3RO` | Eval nhóm + UI + demo — 10 eval case, UI FastAPI + OpenUI, transcript, báo cáo |
+|   4 | Vũ Văn Trường | 2A202603910 | tini.vu.0@gmail.com | `Sz3RO` | Eval nhóm + UI + demo — 10 eval case của nhóm, UI Streamlit (`app.py`) có streaming token thật, transcript live chat, Phần A + poster |
 
 
 ## Cá nhân
