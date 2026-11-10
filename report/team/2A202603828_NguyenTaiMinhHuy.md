@@ -21,7 +21,7 @@ Cụ thể, mình phụ trách những công việc sau:
 1. **Environment Setup:** Thiết lập môi trường Python trên Windows, tạo Virtual Environment và cài đặt các thư viện cần thiết.
 2. **Provider Preflight:** Cấu hình OpenRouter API và kiểm tra khả năng kết nối với model `openai/gpt-4o-mini`.
 3. **Baseline Evaluation:** Chạy phiên bản v0 để xác định kết quả ban đầu của Agent.
-4. **Version Evaluation:** Chạy lại Evaluation từ v1 đến v4 sau khi nhận các thay đổi từ thành viên phụ trách Prompt và Tool Declaration.
+4. **Version Evaluation:** Chạy lại Evaluation từ v1 đến v3 sau khi nhận các thay đổi từ thành viên phụ trách Prompt và Tool Declaration.
 5. **Failure Analysis:** Kiểm tra các test cases thất bại, xác định nguyên nhân và trao đổi lại với nhóm.
 6. **Version Management:** Theo dõi kết quả trong `version_log.csv`, lưu Run JSON và các thông tin liên quan đến từng phiên bản.
 7. **Tool Integration:** Kiểm tra việc đăng ký Wikipedia Tool vào hệ thống và chạy Tool Contract Tests.
@@ -115,7 +115,7 @@ Mình gửi lại kết quả Evaluation cho Quang Thắng để bạn có thể
 
 Mình cũng giữ lại file Run JSON của v0 để nhóm có thể so sánh với những phiên bản tiếp theo. Theo mình, đây là một bước khá quan trọng vì nếu không có Baseline thì sẽ khó biết những thay đổi sau đó có thực sự cải thiện kết quả hay không.
 
-### 3.3. Chạy Evaluation từ v1 đến v4
+### 3.3. Chạy Evaluation từ v1 đến v3
 
 Sau khi có kết quả v0, mình tiếp tục phối hợp với Quang Thắng để chạy các phiên bản cải thiện của Agent.
 
@@ -125,13 +125,13 @@ Mình sử dụng cùng bộ 20 test cases để có thể so sánh kết quả 
 
 **Bảng kết quả Evaluation:**
 
-| Metric | v0 | v1 | v2 | v3 | v4 |
+| Metric | v0 | v1 | v2 | v3 |
 |---|---:|---:|---:|---:|---:|
-| Passed Cases | 14/20 | 16/20 | 18/20 | 19/20 | 20/20 |
-| Case Accuracy | 70% | 80% | 90% | 95% | 100% |
-| Tool Routing Accuracy | 75% | 100% | 100% | 100% | 100% |
-| Argument Accuracy | 70% | 80% | 90% | 95% | 100% |
-| Multiturn Accuracy | 100% | 100% | 100% | 100% | 100% |
+| Passed Cases | 14/20 | 16/20 | 18/20 | 20/20 | 
+| Case Accuracy | 70% | 80% | 90% | 100% | 
+| Tool Routing Accuracy | 75% | 100% | 100% | 100% |
+| Argument Accuracy | 70% | 80% | 90% | 100% |
+| Multiturn Accuracy | 100% | 100% | 100% | 100% |
 | Provider Error Cases | 0 | 0 | 0 | 0 | 0 |
 
 #### Version v1
@@ -195,7 +195,7 @@ Trong khi bộ Evaluation mong đợi:
 
     response_type="yes_no"
 
-Đến v4, case này đã PASS.
+Đến v3, case này đã PASS.
 
 Qua trường hợp này, mình hiểu rằng Tool Calling không chỉ là chọn đúng tên công cụ. Agent còn phải truyền đúng Arguments và xử lý đúng quy trình được yêu cầu.
 
@@ -282,8 +282,7 @@ Qua quá trình này, mình nhận thấy việc chia công việc giúp nhóm c
 - `starter_v0/runs/v0_B_base_openrouter_20261110T174407112036.json`
 - `starter_v0/runs/v1_B_base_openrouter_20261110T180213807365.json`
 - `starter_v0/runs/v2_B_base_openrouter_20261110T181404462799.json`
-- `starter_v0/runs/v3_B_base_openrouter_20261110T183420347940.json`
-- `starter_v0/runs/v4_B_base_openrouter_20261110T195642431852.json`
+- `starter_v0/runs/v3_B_base_openrouter_20261111T002233736709.json`
 
 **Các file liên quan đến việc kiểm tra tích hợp:**
 
@@ -296,7 +295,7 @@ Qua quá trình này, mình nhận thấy việc chia công việc giúp nhóm c
 
 **Git Commit / Pull Request:**
 
-Mình sẽ bổ sung mã Commit hoặc đường dẫn Pull Request sau khi xác nhận các thay đổi cuối cùng đã được đưa lên GitHub.
+
 
 ### 4.2. AI và công cụ đã sử dụng
 
@@ -327,7 +326,7 @@ Ban đầu, mình nghĩ rằng chỉ cần Agent kết nối được với API 
 
 Điều mình học được nhiều nhất là cách sử dụng **Evidence-driven Evaluation (đánh giá dựa trên bằng chứng)**. Thay vì chỉ nhìn vào câu trả lời của Agent rồi cho rằng nó hoạt động tốt, mình cần xem các test cases, đọc kết quả PASS/FAIL và kiểm tra cụ thể nguyên nhân của từng lỗi.
 
-Khi chạy từ v0 đến v4, mình thấy rõ sự thay đổi của Agent qua từng phiên bản. Case Accuracy tăng từ 70% lên 80%, 90%, 95% và cuối cùng là 100%. Điều này giúp mình hiểu hơn về tác động của System Prompt và Tool Declaration đối với cách Agent lựa chọn công cụ và truyền tham số.
+Khi chạy từ v0 đến v3, mình thấy rõ sự thay đổi của Agent qua từng phiên bản. Case Accuracy tăng từ 70% lên 80%, 90% và cuối cùng là 100%. Điều này giúp mình hiểu hơn về tác động của System Prompt và Tool Declaration đối với cách Agent lựa chọn công cụ và truyền tham số.
 
 Tuy nhiên, mình cũng nhận ra rằng kết quả tốt trên bộ test cố định chưa chắc phản ánh đầy đủ chất lượng của một hệ thống thực tế. Một Agent có thể đạt 100% trong Evaluation nhưng vẫn cần được kiểm tra thêm với những câu hỏi mới, dữ liệu thật và các trường hợp lỗi khác nhau.
 
@@ -337,4 +336,4 @@ Về kỹ năng làm việc nhóm, mình học được cách theo dõi tiến �
 
 Mình nghĩ điểm mình cần cải thiện là khả năng tự đọc và phân tích Run JSON sâu hơn, cũng như chủ động thiết kế thêm những test cases mới thay vì chỉ sử dụng bộ Evaluation đã có sẵn. Ngoài ra, mình cũng muốn hiểu rõ hơn cách kiểm tra hoạt động của các Tool với API thật, vì việc chọn đúng Tool trong Evaluation chưa có nghĩa là dữ liệu thực tế luôn được lấy thành công.
 
-**Kết luận:** Với vai trò nhóm trưởng, mình đã trực tiếp thực hiện việc thiết lập môi trường, kiểm tra Provider Preflight, chạy Baseline v0 và Evaluation v1-v4, cập nhật Version Log và kiểm tra Tool Contract của Wikipedia Tool. Qua những công việc này, mình hiểu rõ hơn quy trình kiểm thử và cải thiện AI Agent dựa trên kết quả thực tế, đồng thời có thêm kinh nghiệm trong việc phối hợp và quản lý công việc nhóm.
+**Kết luận:** Với vai trò nhóm trưởng, mình đã trực tiếp thực hiện việc thiết lập môi trường, kiểm tra Provider Preflight, chạy Baseline v0 và Evaluation v1-v3, cập nhật Version Log và kiểm tra Tool Contract của Wikipedia Tool. Qua những công việc này, mình hiểu rõ hơn quy trình kiểm thử và cải thiện AI Agent dựa trên kết quả thực tế, đồng thời có thêm kinh nghiệm trong việc phối hợp và quản lý công việc nhóm.
