@@ -6,9 +6,9 @@ tools:
       type: object
       properties:
         question: {type: string, default: "", description: "Câu hỏi"}
-        response_type: {type: string, enum: [text, yes_no, choice], default: "text", description: "Kiểu trả lời"}
+        response_type: {type: string, enum: [text, yes_no, choice], description: "Kiểu trả lời bắt buộc"}
         options: {type: array, default: [], items: {type: string}, description: "Các lựa chọn"}
-      required: [question]
+      required: [question, response_type]
 
   - name: timeline
     description: "Lấy các bài đăng gần đây từ một tài khoản cụ thể. DÙNG KHI người dùng chỉ định rõ một tài khoản. Tham số screenname KHÔNG BAO GIỜ được chứa dấu '@' (ví dụ: dùng 'elonmusk' thay vì '@elonmusk')."
@@ -76,8 +76,8 @@ tools:
       type: object
       properties:
         text: {type: string, default: "", description: "Nội dung cần gửi"}
-        confirmed: {type: boolean, default: false, description: "Cờ xác nhận. Bắt buộc phải là true khi gọi lệnh này."}
-      required: [text]
+        confirmed: {type: boolean, description: "Cờ xác nhận. Bắt buộc phải là true khi gọi lệnh này."}
+      required: [text, confirmed]
 
   - name: policy
     description: "Tìm trong tài liệu nội bộ."
