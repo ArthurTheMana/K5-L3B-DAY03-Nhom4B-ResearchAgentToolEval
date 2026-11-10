@@ -11,8 +11,8 @@
 
 | STT | Họ tên | MSSV | Email | GitHub | Vai trò |
 | --: | ------ | ---- | ----- | ------ | ------- |
-|   1 |        |      |       |        |         |
-|   2 |        |      |       |        |         |
+|   1 | Vương Quang Thắng | 2A202603855 |       |        |         |
+|   2 | Nguyễn Tài minh Huy | 2A202603828 |       |        |         |
 
 ## Cá nhân
 
