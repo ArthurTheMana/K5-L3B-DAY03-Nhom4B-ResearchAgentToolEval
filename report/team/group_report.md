@@ -365,4 +365,10 @@ Ngoài ra, nếu có thời gian, nhóm sẽ dùng 3 case nhóm còn lại (G04,
 
 ## 8. Tài liệu tham khảo
 
--
+- **OpenUI** — https://openui.com · mã nguồn: https://github.com/thesysdev/openui
+  Dùng `@openuidev/react-ui` (0.18.5) để sinh component library và system prompt, `@openuidev/react-lang` (1.1.0) để sinh prompt, `@openuidev/browser-bundle` (0.2.2) để chạy renderer trên trình duyệt không cần build step.
+- **FastAPI** — https://fastapi.tiangolo.com · **Uvicorn** — https://www.uvicorn.org
+- **Wikipedia REST API** — https://en.wikipedia.org/w/rest.php/v1/search/page (dùng bởi tool `wikipedia` của nhóm)
+- **Cloudflare Tunnel** — https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/downloads/ (dùng để expose UI local ra link public cho team khác thử)
+- **Tài liệu lab**: [README.md](../../README.md) · [RUBRIC.md](../../RUBRIC.md) · [CHECKPOINTS.md](../../CHECKPOINTS.md) · [docs/UI-DEPLOY.md](../../docs/UI-DEPLOY.md)
+- **Tài liệu chính thức của các tool có sẵn**: OpenRouter API, Tavily Search, Firecrawl, RapidAPI (Twitter), arXiv API — xem [docs/TOOL-SETUP.md](../../docs/TOOL-SETUP.md)
