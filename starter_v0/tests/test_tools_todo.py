@@ -11,6 +11,7 @@ Rules:
 from __future__ import annotations
 
 import pytest
+import requests
 
 from conftest import FakeResponse  # noqa: F401  (you will need it)
 from tools import TOOL_FUNCTIONS  # noqa: F401
@@ -110,13 +111,126 @@ def test_policy_instruction_like_lines_go_to_untrusted_text() -> None:
 #   2. bad / missing input from the model (empty string, wrong type, out-of-enum value)
 #   3. failure path (missing key, HTTP error, timeout) -> returns error dict, does not raise
 
-def test_my_new_tool_happy_path() -> None:
-    pytest.skip(TODO)
+# ---------------- wikipedia (team tool) ----------------
+
+WIKI_SEARCH_URL = "https://en.wikipedia.org/w/rest.php/v1/search/page"
 
 
-def test_my_new_tool_bad_input_from_model() -> None:
-    pytest.skip(TODO)
+def test_wikipedia_sends_query_with_user_agent_and_maps_pages(fake_http) -> None:
+    calls = fake_http(FakeResponse({"pages": [
+        {"key": "Retrieval-augmented_generation", "title": "Retrieval-augmented generation",
+         "description": "Type of information retrieval using LLMs", "excerpt": "<span>RAG</span> is ..."},
+        {"key": "Vector_database", "title": "Vector database", "description": None,
+         "excerpt": "A <span class=\"searchmatch\">vector</span> database"},
+        {"title": "page without key is skipped"},
+    ]}))
+
+    result = TOOL_FUNCTIONS["wikipedia"](query="Retrieval-augmented generation", lang="en", limit=3)
+
+    assert len(calls) == 1
+    assert calls[0]["method"] == "GET"
+    assert calls[0]["url"] == WIKI_SEARCH_URL
+    assert calls[0]["params"] == {"q": "Retrieval-augmented generation", "limit": 3}
+    assert calls[0]["headers"]["User-Agent"]  # Wikipedia returns 403 without a User-Agent
+    assert result["lang"] == "en"
+    assert result["items"] == [
+        {
+            "title": "Retrieval-augmented generation",
+            "url": "https://en.wikipedia.org/wiki/Retrieval-augmented_generation",
+            "source": "en.wikipedia.org",
+            "summary": "Type of information retrieval using LLMs",
+        },
+        {
+            # no description -> falls back to excerpt with HTML tags stripped
+            "title": "Vector database",
+            "url": "https://en.wikipedia.org/wiki/Vector_database",
+            "source": "en.wikipedia.org",
+            "summary": "A vector database",
+        },
+    ]
 
 
-def test_my_new_tool_failure_returns_error_dict() -> None:
-    pytest.skip(TODO)
+def test_wikipedia_vi_lang_uses_vietnamese_host(fake_http) -> None:
+    calls = fake_http(FakeResponse({"pages": [{"key": "Trí_tuệ_nhân_tạo", "title": "Trí tuệ nhân tạo"}]}))
+
+    result = TOOL_FUNCTIONS["wikipedia"](query="Trí tuệ nhân tạo", lang="vi", limit=1)
+
+    assert calls[0]["url"] == "https://vi.wikipedia.org/w/rest.php/v1/search/page"
+    assert result["items"][0]["url"] == "https://vi.wikipedia.org/wiki/Trí_tuệ_nhân_tạo"
+    assert result["items"][0]["source"] == "vi.wikipedia.org"
+
+
+@pytest.mark.parametrize("bad_query", ["", "   ", None, 123, ["RAG"]])
+def test_wikipedia_empty_or_non_string_query_returns_error_without_request(fake_http, bad_query) -> None:
+    calls = fake_http(FakeResponse({"pages": []}))
+
+    result = TOOL_FUNCTIONS["wikipedia"](query=bad_query)
+
+    assert result["error"] == "ValueError"
+    assert calls == []
+
+
+@pytest.mark.parametrize("bad_lang", ["fr", "", None, 1])
+def test_wikipedia_out_of_enum_lang_falls_back_to_en(fake_http, bad_lang) -> None:
+    calls = fake_http(FakeResponse({"pages": []}))
+
+    result = TOOL_FUNCTIONS["wikipedia"](query="Retrieval-augmented generation", lang=bad_lang)
+
+    assert calls[0]["url"] == WIKI_SEARCH_URL
+    assert result["lang"] == "en"
+
+
+@pytest.mark.parametrize("raw_limit, sent_limit", [("5", 5), (50, 10), (-3, 1), (0, 3), (None, 3)])
+def test_wikipedia_limit_is_coerced_and_clamped(fake_http, raw_limit, sent_limit) -> None:
+    calls = fake_http(FakeResponse({"pages": []}))
+
+    TOOL_FUNCTIONS["wikipedia"](query="Retrieval-augmented generation", limit=raw_limit)
+
+    assert calls[0]["params"]["limit"] == sent_limit
+
+
+def test_wikipedia_returns_at_most_limit_items(fake_http) -> None:
+    pages = [{"key": f"Page_{i}", "title": f"Page {i}"} for i in range(5)]
+    fake_http(FakeResponse({"pages": pages}))
+
+    result = TOOL_FUNCTIONS["wikipedia"](query="anything", limit=2)
+
+    assert [item["title"] for item in result["items"]] == ["Page 0", "Page 1"]
+
+
+def test_wikipedia_non_numeric_limit_returns_error_without_request(fake_http) -> None:
+    calls = fake_http(FakeResponse({"pages": []}))
+
+    result = TOOL_FUNCTIONS["wikipedia"](query="Retrieval-augmented generation", limit="abc")
+
+    assert result["error"] == "ValueError"
+    assert calls == []
+
+
+@pytest.mark.parametrize("status", [403, 429, 500])
+def test_wikipedia_http_error_returns_error_dict(fake_http, status) -> None:
+    fake_http(FakeResponse(status_code=status))
+
+    result = TOOL_FUNCTIONS["wikipedia"](query="Retrieval-augmented generation")
+
+    assert result["tool"] == "wiki_search"
+    assert result["error"] == "HTTPError"
+    assert str(status) in result["message"]
+
+
+def test_wikipedia_timeout_returns_error_dict(fake_http) -> None:
+    fake_http(requests.Timeout("read timed out"))
+
+    result = TOOL_FUNCTIONS["wikipedia"](query="Retrieval-augmented generation")
+
+    assert result["error"] == "Timeout"
+    assert "timed out" in result["message"]
+
+
+def test_wikipedia_unexpected_payload_returns_empty_items(fake_http) -> None:
+    fake_http(FakeResponse({"unexpected": "shape"}))
+
+    result = TOOL_FUNCTIONS["wikipedia"](query="Retrieval-augmented generation")
+
+    assert result["items"] == []
+    assert "error" not in result
