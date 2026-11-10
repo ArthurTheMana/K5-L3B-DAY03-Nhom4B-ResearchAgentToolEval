@@ -319,14 +319,14 @@ Lần đầu chạy UI, phần lớn câu trả lời **không hiện** — ch�
 
 ## 6. Tổng hợp đóng góp
 
-Chi tiết đóng góp của từng thành viên nằm trong [TEAM.md](../../TEAM.md) và các báo cáo cá nhân `report/team/MSSV_HoTen.md`.
+Chi tiết đóng góp của từng thành viên nằm trong [TEAM.md](../../TEAM.md) và các báo cáo cá nhân trong `report/team/`.
 
-| Vai trò | Phần việc | File sở hữu chính |
+| Thành viên | Phần việc | File sở hữu chính |
 |---|---|---|
-| A — Nhóm trưởng | Setup, chạy v0–v3, `version_log.csv`, bảng B1/B2, gom bài | `starter_v0/artifacts/version_log.csv`, `starter_v0/runs/` |
-| B — Prompt & tool declaration | Sửa `system_prompt.md` + `tools.yaml` qua 3 vòng, đặt giả thuyết mỗi version | `starter_v0/artifacts/system_prompt.md`, `starter_v0/artifacts/tools.yaml` |
-| C — Tool mới + unit test | Viết `wikipedia`, đăng ký registry, 3 unit test | `starter_v0/tools/wikipedia/`, `starter_v0/tests/test_tools_todo.py` |
-| D — Eval nhóm + UI + demo | 10 eval case, UI FastAPI + OpenUI, transcript, Phần A + poster | `starter_v0/data/eval_group.json`, `starter_v0/ui_server.py`, `starter_v0/ui/`, `report/team/` |
+| Nhóm trưởng | Setup, chạy v0–v3, `version_log.csv`, bảng B1/B2, gom bài | `starter_v0/artifacts/version_log.csv`, `starter_v0/runs/` |
+| Vương Quang Thắng (2A202603855) | Sửa `system_prompt.md` + `tools.yaml` qua 3 vòng, đặt giả thuyết mỗi version | `starter_v0/artifacts/system_prompt.md`, `starter_v0/artifacts/tools.yaml` |
+| Nguyễn Tài minh Huy (2A202603828) | Viết tool `wikipedia`, đăng ký registry, unit test | `starter_v0/tools/wikipedia/`, `starter_v0/tests/test_tools_todo.py` |
+| Vũ Văn Trường (2A202603910) | 10 eval case của nhóm, UI FastAPI + OpenUI, transcript, Phần A + poster, hỗ trợ Phần B | `starter_v0/data/eval_group.json`, `starter_v0/ui_server.py`, `starter_v0/ui/`, `starter_v0/transcripts/`, `report/team/` |
 
 ## 7. Hạn chế và hướng cải thiện — B6. Reflection
 
