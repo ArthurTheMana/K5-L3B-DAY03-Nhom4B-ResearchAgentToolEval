@@ -125,8 +125,10 @@ Cả 3 transcript sinh bằng `python chat.py --provider openrouter --version v3
 | Item | Evidence File | What Worked | Risk / Guardrail |
 |---|---|---|---|
 | Tool mới (`tools/wikipedia/`) | `tools/wikipedia/tool.py`, `TOOL.md` | Lấy được định nghĩa chính xác từ Wikipedia. | Model có thể nhầm lẫn giữa tìm tin tức (`lookup`) và tìm khái niệm (`wikipedia`). |
-| Unit test tool mới (≥ 3 test/tool) | `pytest` output (0 failed) | [Thành viên C điền ví dụ: Bắt lỗi khi truyền query trống] | [Thành viên C điền Guardrail: Xử lý exception khi API Wikipedia timeout] |
+| Unit test tool mới (≥ 3 test/tool) | `starter_v0/tests/test_tools_todo.py` (mục `wikipedia`); output: `starter_v0/analysis/pytest_wikipedia.txt` — **23 passed** (10 hàm test, có parametrize), contract test `wikipedia` 5/5, toàn suite **90 passed, 0 failed** | Phủ đủ 3 nhóm: **happy path** (request đúng URL/params/`User-Agent`, map response thành `items`, `lang="vi"` gọi `vi.wikipedia.org`); **input xấu từ model** (query rỗng/`None`/số → trả error dict và **không gửi request**; `lang` ngoài enum → `en`; `limit="5"`/`50`/`-3` được ép kiểu và kẹp 1–10); **nhánh lỗi** (HTTP 403/429/500, timeout → error dict, payload lạ → `items: []`) | Tool **không bao giờ raise**: mọi lỗi đều trả error dict để agent không crash. Test chạy **offline** (mock mạng bằng `fake_http`, không tốn credit). Mỗi test assert cả request gửi đi lẫn kết quả trả về |
 | UI (lệnh chạy + link dùng thử) | `app.py`, link Tunnel | Giao diện hoạt động trơn tru, người ngoài có thể chat live. | Link Tunnel tạm thời, sẽ chết khi ngắt kết nối `cloudflared`. |
+
+Tool unit tests: tool `wikipedia` có **10 hàm test / 23 trường hợp**, tất cả pass. Ví dụ lỗi mà unit test bắt được nhưng eval không bắt được: Wikipedia trả **HTTP 403** cho User-Agent mặc định của thư viện (`python-requests/2.34.2`) và **200** khi gửi User-Agent riêng của tool (đã kiểm tra thực tế). Nếu code quên gửi header này, model vẫn gọi đúng `wikipedia(query=...)` nên eval báo **PASS** (eval chỉ chấm tên tool + args), nhưng mọi lần gọi thật đều lỗi. Test `test_wikipedia_sends_query_with_user_agent_and_maps_pages` assert header `User-Agent` nên bắt được lỗi này ngay, offline.
 
 ## 5. Khó khăn và cách xử lý
 
@@ -141,7 +143,7 @@ Chi tiết đóng góp của từng thành viên nằm trong [TEAM.md](../../TEA
 |---|---|---|
 | A — Nhóm trưởng | Setup, chạy v0–v3, `version_log.csv`, bảng B1/B2, gom bài | `starter_v0/artifacts/version_log.csv`, `starter_v0/runs/` |
 | B — Prompt & tool declaration | Sửa `system_prompt.md` + `tools.yaml` qua 3 vòng, đặt giả thuyết mỗi version | `starter_v0/artifacts/system_prompt.md`, `starter_v0/artifacts/tools.yaml` |
-| C — Tool mới + unit test | Viết `wikipedia`, đăng ký registry, 3 unit test | `starter_v0/tools/wikipedia/`, `starter_v0/tests/test_tools_todo.py` |
+| C — Tool mới + unit test | Viết `wikipedia`, đăng ký registry, 23 unit test (10 hàm test) | `starter_v0/tools/wikipedia/`, `starter_v0/tests/test_tools_todo.py` |
 | D — Eval nhóm + UI + demo | 10 eval case, UI FastAPI + OpenUI, transcript, Phần A + poster | `starter_v0/data/eval_group.json`, `starter_v0/ui_server.py`, `starter_v0/ui/`, `report/team/` |
 
 ## 7. Hạn chế và hướng cải thiện — B6. Reflection
