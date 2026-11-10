@@ -133,6 +133,7 @@ Riêng bảng B2 tôi ghi lại **cả các hồi quy** chứ không chỉ đư�
 |---|---|
 | 10 eval case của nhóm | `starter_v0/data/eval_group.json` |
 | **UI (Streamlit)** | `starter_v0/app.py` |
+| Streaming token thật (module riêng, không sửa `providers/`) | `starter_v0/streaming.py` |
 | Smoke test UI | `starter_v0/scripts/smoke_streamlit.py` |
 | Test thứ tự render + conversation (AppTest) | `starter_v0/scripts/test_render_order.py` |
 | Công cụ dump DOM để kiểm tra thứ tự phần tử | `starter_v0/scripts/dump_dom.py` |
@@ -150,7 +151,7 @@ Commit của tôi:
 - `5291fab` — điền B3/B4 vào báo cáo nhóm, gỡ phần gán công việc của các bạn khác
 - `6d99db3` — sửa 4 điểm trong báo cáo cá nhân này + ghi nguồn thư viện
 - `6b9484a` — chuyển UI chính sang Streamlit (`app.py`), xoá file `docs/UI-DEPLOY.md` do tôi tự soạn nhưng trùng lặp với mục deploy đã có sẵn trong `README.md`
-- _(thay đổi chưa commit)_ — xoá hẳn bản UI FastAPI + OpenUI, thêm streaming theo sự kiện cho `app.py`
+- `ee788a5` — xoá hẳn bản UI FastAPI + OpenUI, thêm streaming token thật cho `app.py`, sửa 3 lỗi logic render, xoá poster, sửa tiếng Việt thiếu dấu
 
 ### 4.2 Số liệu đo được
 
