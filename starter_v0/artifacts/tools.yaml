@@ -1,12 +1,17 @@
 tools:
   # ---------------- Core tools ----------------
   - name: clarify
-    description: "Gửi một câu hỏi cho người dùng. BẮT BUỘC set tham số response_type. ƯU TIÊN RANH GIỚI AN TOÀN: nếu yêu cầu có ý định gửi/đăng/xuất bản nhưng người dùng CHƯA phê duyệt rõ ràng, phải gọi clarify với response_type='yes_no' trước, kể cả khi nội dung còn thiếu; không dùng response_type='text' để hỏi nội dung trong bước này. Chỉ khi người dùng đã xác nhận rõ ràng cho nội dung đã chuẩn bị (ví dụ 'đồng ý', 'gửi đi', 'đăng đi') mới gọi send với confirmed=true. Các trường hợp thiếu thông tin thông thường khác (URL, tên tài khoản, chủ đề) dùng response_type='text'."
+    description: >-
+      Gửi một câu hỏi cho người dùng. BẮT BUỘC set tham số response_type.
+      QUY TẮC ĐỊNH TUYẾN:
+      1. YÊU CẦU GỬI/ĐĂNG (CHƯA XÁC NHẬN): Khi user có ý định gửi/đăng bài, BẠN PHẢI gọi clarify với response_type='yes_no' ĐẦU TIÊN (Ví dụ: "Bạn có chắc muốn đăng không?"). TUYỆT ĐỐI KHÔNG dùng response_type='text' để hỏi xin nội dung ở bước này, cho dù nội dung bản tin đang bị thiếu.
+      2. YÊU CẦU GỬI/ĐĂNG (ĐÃ XÁC NHẬN): Nếu user đã nói 'đồng ý', 'gửi đi', 'đăng đi', KHÔNG gọi clarify nữa. Chuyển thẳng sang gọi tool 'send' với confirmed=true.
+      3. CÁC TRƯỜNG HỢP KHÁC: Khi thiếu URL, thiếu tên tài khoản, hoặc thiếu keyword để research, dùng response_type='text'.
     parameters:
       type: object
       properties:
         question: {type: string, default: "", description: "Câu hỏi"}
-        response_type: {type: string, enum: [text, yes_no, choice], description: "Kiểu trả lời bắt buộc"}
+        response_type: {type: string, enum: [text, yes_no, choice], default: "text", description: "Kiểu trả lời (bắt buộc)"}
         options: {type: array, default: [], items: {type: string}, description: "Các lựa chọn"}
       required: [question, response_type]
 
