@@ -12,7 +12,7 @@
 
 Tôi phụ trách ba việc chính trong nhóm:
 
-1. **Viết bộ eval của nhóm** (`starter_v0/data/eval_group.json`) — 10 case: 5 single turn và 5 multi turn, trong đó có 3 case kiểm tra việc agent route tới tool `wikipedia` mà Nguyễn Tài minh Huy viết.
+1. **Viết bộ eval của nhóm** (`starter_v0/data/eval_group.json`) — 10 case: 5 single turn và 5 multi turn, trong đó có 3 case kiểm tra việc agent route tới tool `wikipedia` mà một bạn khác trong nhóm viết.
 2. **Xây UI cho agent** (`starter_v0/ui_server.py` + `starter_v0/ui/`) — FastAPI phía Python, frontend là một trang HTML tĩnh render component OpenUI, không cần build step.
 3. **Chạy live chat và làm báo cáo** (`starter_v0/transcripts/`, `report/team/`) — 3 transcript để chứng minh agent thật sự hỏi lại và xin xác nhận trước khi hành động; Phần A của báo cáo nhóm, poster, và hỗ trợ điền Phần B.
 
