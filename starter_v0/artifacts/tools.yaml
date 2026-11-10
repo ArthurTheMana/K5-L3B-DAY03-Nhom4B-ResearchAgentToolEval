@@ -1,7 +1,7 @@
 tools:
   # ---------------- Core tools ----------------
   - name: clarify
-    description: "Gửi một câu hỏi cho người dùng. DÙNG KHI yêu cầu còn mơ hồ, thiếu URL, thiếu tên tài khoản, thiếu nội dung, hoặc chưa có phê duyệt rõ ràng cho thao tác gửi/đăng. BẮT BUỘC set tham số response_type. Với yêu cầu gửi/đăng, hãy kiểm tra toàn bộ lịch sử hội thoại: chỉ gọi clarify với response_type='yes_no' nếu người dùng CHƯA phê duyệt rõ ràng; nếu người dùng đã xác nhận bằng các câu như 'đồng ý', 'gửi đi', 'đăng đi' sau khi nội dung đã được chuẩn bị, KHÔNG hỏi lại và phải gọi send với confirmed=true. Các trường hợp thiếu thông tin thông thường khác dùng response_type='text'."
+    description: "Gửi một câu hỏi cho người dùng. BẮT BUỘC set tham số response_type. ƯU TIÊN RANH GIỚI AN TOÀN: nếu yêu cầu có ý định gửi/đăng/xuất bản nhưng người dùng CHƯA phê duyệt rõ ràng, phải gọi clarify với response_type='yes_no' trước, kể cả khi nội dung còn thiếu; không dùng response_type='text' để hỏi nội dung trong bước này. Chỉ khi người dùng đã xác nhận rõ ràng cho nội dung đã chuẩn bị (ví dụ 'đồng ý', 'gửi đi', 'đăng đi') mới gọi send với confirmed=true. Các trường hợp thiếu thông tin thông thường khác (URL, tên tài khoản, chủ đề) dùng response_type='text'."
     parameters:
       type: object
       properties:
