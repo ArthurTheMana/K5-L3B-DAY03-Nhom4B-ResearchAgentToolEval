@@ -1,0 +1,43 @@
+# pytest evidence — tool wikipedia (tool commit 33fa5c7; run on main @ 8d63909)
+# command: pytest -v tests/test_tools_todo.py -k wikipedia ; pytest -q ; pytest -v tests/test_tool_contract.py -k wikipedia
+
+============================= test session starts =============================
+plugins: anyio-4.16.0
+collecting ... collected 37 items / 14 deselected / 23 selected
+
+tests/test_tools_todo.py::test_wikipedia_sends_query_with_user_agent_and_maps_pages PASSED [  4%]
+tests/test_tools_todo.py::test_wikipedia_vi_lang_uses_vietnamese_host PASSED [  8%]
+tests/test_tools_todo.py::test_wikipedia_empty_or_non_string_query_returns_error_without_request[] PASSED [ 13%]
+tests/test_tools_todo.py::test_wikipedia_empty_or_non_string_query_returns_error_without_request[   ] PASSED [ 17%]
+tests/test_tools_todo.py::test_wikipedia_empty_or_non_string_query_returns_error_without_request[None] PASSED [ 21%]
+tests/test_tools_todo.py::test_wikipedia_empty_or_non_string_query_returns_error_without_request[123] PASSED [ 26%]
+tests/test_tools_todo.py::test_wikipedia_empty_or_non_string_query_returns_error_without_request[bad_query4] PASSED [ 30%]
+tests/test_tools_todo.py::test_wikipedia_out_of_enum_lang_falls_back_to_en[fr] PASSED [ 34%]
+tests/test_tools_todo.py::test_wikipedia_out_of_enum_lang_falls_back_to_en[] PASSED [ 39%]
+tests/test_tools_todo.py::test_wikipedia_out_of_enum_lang_falls_back_to_en[None] PASSED [ 43%]
+tests/test_tools_todo.py::test_wikipedia_out_of_enum_lang_falls_back_to_en[1] PASSED [ 47%]
+tests/test_tools_todo.py::test_wikipedia_limit_is_coerced_and_clamped[5-5] PASSED [ 52%]
+tests/test_tools_todo.py::test_wikipedia_limit_is_coerced_and_clamped[50-10] PASSED [ 56%]
+tests/test_tools_todo.py::test_wikipedia_limit_is_coerced_and_clamped[-3-1] PASSED [ 60%]
+tests/test_tools_todo.py::test_wikipedia_limit_is_coerced_and_clamped[0-3] PASSED [ 65%]
+tests/test_tools_todo.py::test_wikipedia_limit_is_coerced_and_clamped[None-3] PASSED [ 69%]
+tests/test_tools_todo.py::test_wikipedia_returns_at_most_limit_items PASSED [ 73%]
+tests/test_tools_todo.py::test_wikipedia_non_numeric_limit_returns_error_without_request PASSED [ 78%]
+tests/test_tools_todo.py::test_wikipedia_http_error_returns_error_dict[403] PASSED [ 82%]
+tests/test_tools_todo.py::test_wikipedia_http_error_returns_error_dict[429] PASSED [ 86%]
+tests/test_tools_todo.py::test_wikipedia_http_error_returns_error_dict[500] PASSED [ 91%]
+tests/test_tools_todo.py::test_wikipedia_timeout_returns_error_dict PASSED [ 95%]
+tests/test_tools_todo.py::test_wikipedia_unexpected_payload_returns_empty_items PASSED [100%]
+
+====================== 23 passed, 14 deselected in 0.08s ======================
+
+# full suite: pytest -q
+90 passed, 14 skipped in 0.28s
+
+# contract tests for wikipedia
+tests/test_tool_contract.py::test_every_declared_tool_has_implementation[wikipedia] PASSED [ 20%]
+tests/test_tool_contract.py::test_declared_params_exist_in_function_signature[wikipedia] PASSED [ 40%]
+tests/test_tool_contract.py::test_required_params_are_declared[wikipedia] PASSED [ 60%]
+tests/test_tool_contract.py::test_description_is_not_empty[wikipedia] PASSED [ 80%]
+tests/test_tool_contract.py::test_tool_folder_has_tool_md_with_matching_name[wikipedia] PASSED [100%]
+====================== 5 passed, 55 deselected in 0.08s =======================

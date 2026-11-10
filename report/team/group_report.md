@@ -109,6 +109,13 @@ Lấy từ `starter_v0/transcripts/*.transcript.json`.
 
 Chi tiết đóng góp của từng thành viên nằm trong [TEAM.md](../../TEAM.md) và các báo cáo cá nhân `report/team/MSSV_HoTen.md`.
 
+| Vai trò | Phần việc | File sở hữu chính |
+|---|---|---|
+| A — Nhóm trưởng | Setup, chạy v0–v3, `version_log.csv`, bảng B1/B2, gom bài | `starter_v0/artifacts/version_log.csv`, `starter_v0/runs/` |
+| B — Prompt & tool declaration | Sửa `system_prompt.md` + `tools.yaml` qua 3 vòng, đặt giả thuyết mỗi version | `starter_v0/artifacts/system_prompt.md`, `starter_v0/artifacts/tools.yaml` |
+| C — Tool mới + unit test | Viết `wikipedia`, đăng ký registry, 3 unit test | `starter_v0/tools/wikipedia/`, `starter_v0/tests/test_tools_todo.py` |
+| D — Eval nhóm + UI + demo | 10 eval case, UI FastAPI + OpenUI, transcript, Phần A + poster | `starter_v0/data/eval_group.json`, `starter_v0/ui_server.py`, `starter_v0/ui/`, `report/team/` |
+
 ## 7. Hạn chế và hướng cải thiện — B6. Reflection
 
 - **Fix thuộc `system_prompt.md`:** Cải thiện tư duy tổng thể (Routing rules) và chặn các hành vi ảo giác như đoán bừa thông tin.
