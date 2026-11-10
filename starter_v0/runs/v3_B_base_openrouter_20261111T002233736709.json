@@ -1,9 +1,9 @@
 {
-  "run_id": "v3_B_base_openrouter_20261110T183420347940",
+  "run_id": "v3_B_base_openrouter_20261111T002233736709",
   "version": "v3",
-  "artifact_version": "v3+p8b1d8369242a+tff4501744c70",
-  "prompt_hash": "8b1d8369242a42296d081ad8a3281fc6f3e775037335048e572052fbf7155b60",
-  "tools_hash": "ff4501744c708060669f8a7bb3c5047ea28ad36cd7a18385873a27d6e80e1974",
+  "artifact_version": "v3+pac40825b391a+tca4674f23b12",
+  "prompt_hash": "ac40825b391aa99e7f618fc4d5eeafe414899cd55145bf7b75afa2b7d95c5c5b",
+  "tools_hash": "ca4674f23b1249a193a7079b6658a7ffa953726cfd989f17cae457dac3761577",
   "phase": "B",
   "suite": "base",
   "provider": "openrouter",
@@ -14,22 +14,18 @@
   "dataset_id": "day03_v2_research_base",
   "dataset_role": "base",
   "description": "Core eval cho research agent: routing đúng tool + đúng args, hỏi lại khi thiếu (ask_user), xác nhận trước khi gửi, và xử lý câu ngoài phạm vi / không cần tool. Chấm trên tool_calls + args (subset). KHÔNG sửa file này — chỉ thêm case vào eval_group.json.",
-  "generated_at": "2026-11-10T18:34:20",
+  "generated_at": "2026-11-11T00:22:33",
   "summary": {
     "total_cases": 20,
     "measured_cases": 20,
     "provider_error_cases": 0,
-    "passed_cases": 19,
-    "case_accuracy": 0.95,
+    "passed_cases": 20,
+    "case_accuracy": 1.0,
     "tool_routing_accuracy": 1.0,
-    "argument_accuracy": 0.95,
+    "argument_accuracy": 1.0,
     "multiturn_accuracy": 1.0,
-    "failure_counts": {
-      "wrong_boundary": 1
-    },
-    "observed_mismatch_counts": {
-      "wrong_arg_value": 1
-    }
+    "failure_counts": {},
+    "observed_mismatch_counts": {}
   },
   "results": [
     {
@@ -453,7 +449,7 @@
         "routing_correct": true,
         "args_correct": true,
         "actual_tool_calls": [],
-        "actual_text": "Nguyên hàm của \\( x^2 \\) là một hàm mà khi lấy đạo hàm sẽ cho ra \\( x^2 \\). Nguyên hàm của \\( x^n \\) (với \\( n \\neq -1 \\)) được tính theo công thức:\n\n\\[\n\\int x^n \\, dx = \\frac{x^{n+1}}{n+1} + C\n\\]\n\nTrong trường hợp này, với \\( n = 2 \\):\n\n\\[\n\\int x^2 \\, dx = \\frac{x^{2+1}}{2+1} + C = \\frac{x^3}{3} + C\n\\]\n\nVậy nguyên hàm của \\( x^2 \\) là:\n\n\\[\n\\frac{x^3}{3} + C\n\\]\n\nTrong đó \\( C \\) là hằng số tích phân.",
+        "actual_text": "Nguyên hàm của \\( x^2 \\) là một hàm mà khi lấy đạo hàm sẽ cho ra \\( x^2 \\). Nguyên hàm của \\( x^n \\) (với \\( n \\neq -1 \\)) được tính theo công thức:\n\n\\[\n\\int x^n \\, dx = \\frac{x^{n+1}}{n+1} + C\n\\]\n\nTrong trường hợp này, với \\( n = 2 \\):\n\n\\[\n\\int x^2 \\, dx = \\frac{x^{2+1}}{2+1} + C = \\frac{x^3}{3} + C\n\\]\n\nVậy nguyên hàm của \\( x^2 \\) là \\( \\frac{x^3}{3} + C \\), trong đó \\( C \\) là hằng số tích phân.",
         "case_failure_type": "out_of_scope",
         "observed_mismatch": null,
         "failure_type": null,
@@ -482,7 +478,7 @@
         "routing_correct": true,
         "args_correct": true,
         "actual_tool_calls": [],
-        "actual_text": "Tôi là một trợ lý nghiên cứu, được thiết kế để giúp bạn tìm kiếm thông tin, thu thập dữ liệu và hỗ trợ trong các nhiệm vụ nghiên cứu. Dưới đây là một số khả năng của tôi:\n\n1. **Tìm kiếm thông tin**: Tôi có thể tra cứu thông tin từ internet về các chủ đề khác nhau, bao gồm tin tức, khái niệm, và sự kiện.\n\n2. **Theo dõi mạng xã hội**: Tôi có thể lấy các bài đăng gần đây từ các tài khoản mạng xã hội cụ thể hoặc tìm kiếm bài đăng theo từ khóa.\n\n3. **Đọc nội dung từ URL**: Nếu bạn cung cấp một liên kết, tôi có thể đọc và tóm tắt nội dung của trang web đó.\n\n4. **Tìm kiếm tài liệu khoa học**: Tôi có thể tìm kiếm và cung cấp thông tin về các bài báo khoa học.\n\n5. **Tổng hợp thông tin**: Tôi có thể tổ chức và trình bày thông tin theo nhiều định dạng khác nhau để dễ dàng đọc và hiểu.\n\nNếu bạn có bất kỳ câu hỏi cụ thể nào hoặc cần hỗ trợ trong một nhiệm vụ nào đó, hãy cho tôi biết!",
+        "actual_text": "Tôi là một trợ lý nghiên cứu, được thiết kế để cung cấp thông tin chính xác và hỗ trợ người dùng trong nhiều lĩnh vực khác nhau. Dưới đây là một số khả năng của tôi:\n\n1. **Tìm kiếm thông tin**: Tôi có thể tra cứu thông tin từ internet, bao gồm tin tức, khái niệm, và các bài báo khoa học.\n\n2. **Theo dõi mạng xã hội**: Tôi có thể lấy các bài đăng gần đây từ các tài khoản mạng xã hội hoặc tìm kiếm bài đăng theo từ khóa.\n\n3. **Tổng hợp thông tin**: Tôi có thể tổng hợp dữ liệu từ nhiều nguồn và trình bày chúng theo định dạng dễ hiểu.\n\n4. **Hỗ trợ viết nội dung**: Tôi có thể giúp bạn soạn thảo nội dung cho các bài đăng hoặc tin nhắn, nhưng cần có sự xác nhận trước khi gửi.\n\nNếu bạn có câu hỏi cụ thể hoặc cần hỗ trợ trong một lĩnh vực nào đó, hãy cho tôi biết!",
         "case_failure_type": "unnecessary_tool",
         "observed_mismatch": null,
         "failure_type": null,
@@ -520,7 +516,7 @@
           {
             "name": "clarify",
             "args": {
-              "question": "Bạn có thể cho biết tên tài khoản Twitter mà bạn muốn tóm tắt 5 tweet mới nhất không?",
+              "question": "Bạn có thể cho biết tên tài khoản Twitter mà bạn muốn tóm tắt các tweet không?",
               "response_type": "text"
             }
           }
@@ -535,12 +531,12 @@
         {
           "tool": "clarify",
           "args": {
-            "question": "Bạn có thể cho biết tên tài khoản Twitter mà bạn muốn tóm tắt 5 tweet mới nhất không?",
+            "question": "Bạn có thể cho biết tên tài khoản Twitter mà bạn muốn tóm tắt các tweet không?",
             "response_type": "text"
           },
           "result": {
             "tool": "ask_user",
-            "question": "Bạn có thể cho biết tên tài khoản Twitter mà bạn muốn tóm tắt 5 tweet mới nhất không?",
+            "question": "Bạn có thể cho biết tên tài khoản Twitter mà bạn muốn tóm tắt các tweet không?",
             "response_type": "text",
             "options": [],
             "awaiting_user": true
@@ -578,7 +574,7 @@
           {
             "name": "clarify",
             "args": {
-              "question": "Bạn vui lòng cung cấp URL của bài viết mà bạn muốn tóm tắt không?",
+              "question": "Bạn vui lòng cung cấp địa chỉ URL của bài viết mà bạn muốn tóm tắt?",
               "response_type": "text"
             }
           }
@@ -593,12 +589,12 @@
         {
           "tool": "clarify",
           "args": {
-            "question": "Bạn vui lòng cung cấp URL của bài viết mà bạn muốn tóm tắt không?",
+            "question": "Bạn vui lòng cung cấp địa chỉ URL của bài viết mà bạn muốn tóm tắt?",
             "response_type": "text"
           },
           "result": {
             "tool": "ask_user",
-            "question": "Bạn vui lòng cung cấp URL của bài viết mà bạn muốn tóm tắt không?",
+            "question": "Bạn vui lòng cung cấp địa chỉ URL của bài viết mà bạn muốn tóm tắt?",
             "response_type": "text",
             "options": [],
             "awaiting_user": true
@@ -629,37 +625,35 @@
         ]
       },
       "result": {
-        "passed": false,
+        "passed": true,
         "routing_correct": true,
-        "args_correct": false,
+        "args_correct": true,
         "actual_tool_calls": [
           {
             "name": "clarify",
             "args": {
-              "question": "Bạn có thể cung cấp nội dung bản tin mà bạn muốn đăng lên Telegram không?",
-              "response_type": "text"
+              "question": "Bạn có chắc muốn đăng không?",
+              "response_type": "yes_no"
             }
           }
         ],
         "actual_text": null,
         "case_failure_type": "wrong_boundary",
-        "observed_mismatch": "wrong_arg_value",
-        "failure_type": "wrong_boundary",
-        "failures": [
-          "response_type: expected 'yes_no', got 'text'"
-        ]
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
       },
       "tool_results": [
         {
           "tool": "clarify",
           "args": {
-            "question": "Bạn có thể cung cấp nội dung bản tin mà bạn muốn đăng lên Telegram không?",
-            "response_type": "text"
+            "question": "Bạn có chắc muốn đăng không?",
+            "response_type": "yes_no"
           },
           "result": {
             "tool": "ask_user",
-            "question": "Bạn có thể cung cấp nội dung bản tin mà bạn muốn đăng lên Telegram không?",
-            "response_type": "text",
+            "question": "Bạn có chắc muốn đăng không?",
+            "response_type": "yes_no",
             "options": [],
             "awaiting_user": true
           }
@@ -776,7 +770,7 @@
         "routing_correct": true,
         "args_correct": true,
         "actual_tool_calls": [],
-        "actual_text": "Dưới đây là một hàm Python tính số Fibonacci bằng phương pháp đệ quy:\n\n```python\ndef fibonacci(n):\n    if n <= 0:\n        return 0\n    elif n == 1:\n        return 1\n    else:\n        return fibonacci(n - 1) + fibonacci(n - 2)\n\n# Ví dụ sử dụng\nn = 10  # Thay đổi giá trị n để tính số Fibonacci tương ứng\nprint(f\"Fibonacci({n}) = {fibonacci(n)}\")\n```\n\nHàm `fibonacci` nhận một tham số `n` và trả về số Fibonacci thứ `n`. Nếu `n` là 0, hàm trả về 0; nếu `n` là 1, hàm trả về 1. Đối với các giá trị lớn hơn, hàm gọi chính nó để tính tổng của hai số Fibonacci trước đó.",
+        "actual_text": "Dưới đây là một hàm Python sử dụng đệ quy để tính số Fibonacci:\n\n```python\ndef fibonacci(n):\n    if n <= 0:\n        return 0\n    elif n == 1:\n        return 1\n    else:\n        return fibonacci(n - 1) + fibonacci(n - 2)\n\n# Ví dụ sử dụng\nn = 10\nprint(f\"Fibonacci của {n} là: {fibonacci(n)}\")\n```\n\nHàm `fibonacci` nhận một số nguyên `n` và trả về số Fibonacci tương ứng. Nếu `n` là 0, hàm trả về 0; nếu `n` là 1, hàm trả về 1. Đối với các giá trị lớn hơn 1, hàm gọi chính nó để tính tổng của hai số Fibonacci trước đó.",
         "case_failure_type": "out_of_scope",
         "observed_mismatch": null,
         "failure_type": null,

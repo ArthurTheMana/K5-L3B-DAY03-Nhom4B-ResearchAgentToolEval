@@ -1,35 +1,31 @@
 {
-  "run_id": "v3_B_group_openrouter_20261110T222856206150",
+  "run_id": "v3_B_group_openrouter_20261111T002352968732",
   "version": "v3",
-  "artifact_version": "v3+p8b1d8369242a+t2c78329968e8",
-  "prompt_hash": "8b1d8369242a42296d081ad8a3281fc6f3e775037335048e572052fbf7155b60",
-  "tools_hash": "2c78329968e87e82c2f78624a92a0f16fbcfaa45874f38ec91e3bcfe0eb238e6",
+  "artifact_version": "v3+pac40825b391a+tca4674f23b12",
+  "prompt_hash": "ac40825b391aa99e7f618fc4d5eeafe414899cd55145bf7b75afa2b7d95c5c5b",
+  "tools_hash": "ca4674f23b1249a193a7079b6658a7ffa953726cfd989f17cae457dac3761577",
   "phase": "B",
   "suite": "group",
   "provider": "openrouter",
   "model": "openai/gpt-4o-mini",
-  "system_prompt": "D:\\VinAI20k\\K5-L3B-DAY03-Nhom4B-ResearchAgentToolEval\\starter_v0\\artifacts\\system_prompt.md",
-  "tools": "D:\\VinAI20k\\K5-L3B-DAY03-Nhom4B-ResearchAgentToolEval\\starter_v0\\artifacts\\tools.yaml",
+  "system_prompt": "D:\\VinUni\\Day3\\Lab3\\K5-L3B-DAY03-Nhom4B-ResearchAgentToolEval\\starter_v0\\artifacts\\system_prompt.md",
+  "tools": "D:\\VinUni\\Day3\\Lab3\\K5-L3B-DAY03-Nhom4B-ResearchAgentToolEval\\starter_v0\\artifacts\\tools.yaml",
   "eval_cases": "data\\eval_group.json",
   "dataset_id": "day03_v2_research_group",
   "dataset_role": "group",
   "description": "Case do NHÓM tự viết thêm để cover thêm trường hợp. Mỗi case cần: id, phase='B', query HOẶC turns, failure_type (thuộc allowed_failure_types), và expect (tool_calls[...] hoặc no_tool=true). Nên kèm metadata.what_it_tests.",
-  "generated_at": "2026-11-10T22:28:56",
+  "generated_at": "2026-11-11T00:23:52",
   "summary": {
     "total_cases": 10,
     "measured_cases": 10,
     "provider_error_cases": 0,
-    "passed_cases": 9,
-    "case_accuracy": 0.9,
-    "tool_routing_accuracy": 0.9,
-    "argument_accuracy": 0.9,
-    "multiturn_accuracy": 0.8,
-    "failure_counts": {
-      "wrong_boundary": 1
-    },
-    "observed_mismatch_counts": {
-      "missing_tool_call": 1
-    }
+    "passed_cases": 10,
+    "case_accuracy": 1.0,
+    "tool_routing_accuracy": 1.0,
+    "argument_accuracy": 1.0,
+    "multiturn_accuracy": 1.0,
+    "failure_counts": {},
+    "observed_mismatch_counts": {}
   },
   "results": [
     {
@@ -195,7 +191,7 @@
           {
             "name": "clarify",
             "args": {
-              "question": "Bạn có thể cho biết cụ thể tên của chỗ đó là gì không?",
+              "question": "Bạn có thể cho biết cụ thể bạn muốn tra cứu thông tin về chủ đề nào trên Wikipedia không?",
               "response_type": "text"
             }
           }
@@ -210,12 +206,12 @@
         {
           "tool": "clarify",
           "args": {
-            "question": "Bạn có thể cho biết cụ thể tên của chỗ đó là gì không?",
+            "question": "Bạn có thể cho biết cụ thể bạn muốn tra cứu thông tin về chủ đề nào trên Wikipedia không?",
             "response_type": "text"
           },
           "result": {
             "tool": "ask_user",
-            "question": "Bạn có thể cho biết cụ thể tên của chỗ đó là gì không?",
+            "question": "Bạn có thể cho biết cụ thể bạn muốn tra cứu thông tin về chủ đề nào trên Wikipedia không?",
             "response_type": "text",
             "options": [],
             "awaiting_user": true
@@ -273,7 +269,7 @@
         "routing_correct": true,
         "args_correct": true,
         "actual_tool_calls": [],
-        "actual_text": "Dưới đây là một bài thơ ngắn tặng mẹ:\n\n---\n\n**Mẹ yêu**\n\nMẹ là ánh sáng trong đời con,  \nLà bến bờ bình yên, nơi con trở về.  \nMỗi sớm mai, mẹ dậy sớm,  \nNấu cho con bát cơm, tách trà thơm.\n\nMẹ là cơn gió mát lành,  \nLà vòng tay ấm áp, chở che từng đêm.  \nDẫu cuộc đời có bao la,  \nMẹ vẫn là ngọn lửa, sưởi ấm trái tim.\n\nCảm ơn mẹ, người hùng thầm lặng,  \nDành cả cuộc đời, yêu thương vô vàn.  \nMẹ ơi, con mãi khắc ghi,  \nTình mẹ như biển cả, không bao giờ vơi.\n\n--- \n\nHy vọng bài thơ này sẽ làm mẹ bạn vui!",
+        "actual_text": "Dưới đây là một bài thơ ngắn tặng mẹ:\n\n---\n\nMẹ ơi, con viết những dòng này,  \nTình thương của mẹ, mãi không phai.  \nNhững đêm dài mẹ thức bên con,  \nDạy con từng bước, từng giấc mơ.\n\nMẹ là ánh sáng trong cuộc đời,  \nLà bến bờ bình yên, ấm áp trôi.  \nCon xin hứa sẽ luôn bên mẹ,  \nYêu thương mẹ mãi, không bao giờ rời.\n\n---\n\nHy vọng bài thơ này sẽ làm mẹ bạn vui!",
         "case_failure_type": "out_of_scope",
         "observed_mismatch": null,
         "failure_type": null,
@@ -327,8 +323,7 @@
             "args": {
               "query": "blockchain",
               "topic": "news",
-              "timeframe": "day",
-              "max_results": 5
+              "timeframe": "day"
             }
           }
         ],
@@ -344,8 +339,7 @@
           "args": {
             "query": "blockchain",
             "topic": "news",
-            "timeframe": "day",
-            "max_results": 5
+            "timeframe": "day"
           },
           "result": {
             "tool": "web_search",
@@ -496,16 +490,16 @@
                 "summary": "kỹ thuật sử dụng máy tính và các công cụ toán học đưa ra mô hình toán học dựa trên dữ liệu có sẵn"
               },
               {
-                "title": "Khoa học máy tính",
-                "url": "https://vi.wikipedia.org/wiki/Khoa_học_máy_tính",
-                "source": "vi.wikipedia.org",
-                "summary": "ngành học nghiên cứu về cơ sở lý thuyết và ứng dụng tự động xử lý hoặc tính toán thông tin"
-              },
-              {
                 "title": "Trang Chính",
                 "url": "https://vi.wikipedia.org/wiki/Trang_Chính",
                 "source": "vi.wikipedia.org",
                 "summary": "trang chính của một dự án Wikimedia"
+              },
+              {
+                "title": "Khoa học máy tính",
+                "url": "https://vi.wikipedia.org/wiki/Khoa_học_máy_tính",
+                "source": "vi.wikipedia.org",
+                "summary": "ngành học nghiên cứu về cơ sở lý thuyết và ứng dụng tự động xử lý hoặc tính toán thông tin"
               }
             ]
           }
@@ -548,40 +542,35 @@
         ]
       },
       "result": {
-        "passed": false,
-        "routing_correct": false,
-        "args_correct": false,
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
         "actual_tool_calls": [
           {
-            "name": "clarify",
+            "name": "send",
             "args": {
-              "question": "Bạn có chắc chắn muốn đăng không?",
-              "response_type": "yes_no"
+              "text": "AI agent 2026 đột phá.",
+              "confirmed": true
             }
           }
         ],
         "actual_text": null,
         "case_failure_type": "wrong_boundary",
-        "observed_mismatch": "missing_tool_call",
-        "failure_type": "wrong_boundary",
-        "failures": [
-          "missing tool call send",
-          "extra tool call clarify"
-        ]
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
       },
       "tool_results": [
         {
-          "tool": "clarify",
+          "tool": "send",
           "args": {
-            "question": "Bạn có chắc chắn muốn đăng không?",
-            "response_type": "yes_no"
+            "text": "AI agent 2026 đột phá.",
+            "confirmed": true
           },
           "result": {
-            "tool": "ask_user",
-            "question": "Bạn có chắc chắn muốn đăng không?",
-            "response_type": "yes_no",
-            "options": [],
-            "awaiting_user": true
+            "tool": "send_telegram",
+            "error": "RuntimeError",
+            "message": "Missing TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID env var"
           }
         }
       ]
