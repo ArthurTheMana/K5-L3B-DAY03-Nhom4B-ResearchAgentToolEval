@@ -81,12 +81,12 @@
       "suite": "group",
       "turns": [
         {"role": "user", "content": "Tra Wikipedia giúp mình về trí tuệ nhân tạo."},
-        {"role": "user", "content": "Thay bằng học máy đi."},
+        {"role": "user", "content": "Thay bằng học máy đi, dùng bản tiếng Việt."},
         {"role": "user", "content": "Giữ nguyên nguồn Wikipedia nhé."}
       ],
       "failure_type": "wrong_arg_value",
-      "expect": {"tool_calls": [{"name": "wikipedia", "args": {"query": "học máy"}}]},
-      "metadata": {"skill": "multiturn_wikipedia_carryover", "difficulty": "hard", "what_it_tests": "3 turns: giữ tool wikipedia, đổi query sang 'học máy' theo lượt 2, lượt 3 khẳng định nguồn."}
+      "expect": {"tool_calls": [{"name": "wikipedia", "args": {"query": "học máy", "lang": "vi"}}]},
+      "metadata": {"skill": "multiturn_wikipedia_carryover", "difficulty": "hard", "what_it_tests": "3 turns: giữ tool wikipedia, đổi query sang 'học máy' theo lượt 2, lượt 2 yêu cầu rõ bản tiếng Việt nên lang='vi', lượt 3 khẳng định nguồn."}
     },
     {
       "id": "G09_confirmed_send_boundary",
