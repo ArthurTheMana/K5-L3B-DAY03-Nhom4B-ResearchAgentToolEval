@@ -163,7 +163,8 @@ Commit của tôi:
 | `scripts/smoke_streamlit.py` | **PASS** — tool loop gọi đúng `wikipedia`, nhánh `clarify` dừng đúng (`waiting_for_user`), **thứ tự stream** đúng (`tool` → `final`), `chunk_text` giữ nguyên nội dung, transcript ghi/đọc được |
 | `scripts/test_render_order.py` | **PASS** — kiểm tra trên DOM thật (AppTest): 2 lượt → 4 chat message, tool card luôn render **trước** câu trả lời, lịch sử lượt 1 giữ nguyên sang lượt 2, transcript ghi đúng 2 lượt |
 | UI end-to-end (API key thật) | Gõ *"Cho mình tổng quan trên Wikipedia về blockchain"* → tool `wikipedia` trả dữ liệu thật từ Wikipedia (`Blockchain`, `Cryptocurrency`, `Fork (blockchain)`), agent trả lời có link nguồn |
-| Transcript do chính UI sinh | `starter_v0/transcripts/v3_openrouter_20261110T213026001249.transcript.json` — 2 lượt: *"HI, chào bạn"* (không gọi tool) và *"Tra cứu giá vàng hôm nay"* (gọi `lookup`) |
+| Transcript do chính UI sinh | `starter_v0/transcripts/v3_openrouter_20261110T225123602600.transcript.json` — **3 lượt do UI Streamlit sinh**, phủ đủ 3 hành vi rubric C6: (1) yêu cầu thường → `wikipedia` trả dữ liệu thật (`Blockchain`, `Cryptocurrency`, `Fork (blockchain)`), (2) thiếu thông tin → agent hỏi lại vì thiếu tên tài khoản, (3) yêu cầu đăng → `clarify` (`status: waiting_for_user`) |
+| | `starter_v0/transcripts/v3_openrouter_20261110T213026001249.transcript.json` — 2 lượt chat thật trên UI: *"HI, chào bạn"* (không gọi tool) và *"Tra cứu giá vàng hôm nay"* (gọi `lookup`, tool trả error dict vì thiếu `TAVILY_API_KEY` — agent báo lỗi thật, không bịa kết quả) |
 
 ### 4.3 Công cụ AI đã dùng và cách tôi tự kiểm tra kết quả
 
