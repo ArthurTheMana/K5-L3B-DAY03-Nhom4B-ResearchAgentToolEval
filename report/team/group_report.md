@@ -146,7 +146,7 @@ Chi tiết đóng góp của từng thành viên nằm trong [TEAM.md](../../TEA
 | A — Nhóm trưởng | Setup, chạy v0–v3, `version_log.csv`, bảng B1/B2, gom bài | `starter_v0/artifacts/version_log.csv`, `starter_v0/runs/` |
 | B — Prompt & tool declaration | Sửa `system_prompt.md` + `tools.yaml` qua 3 vòng, đặt giả thuyết mỗi version | `starter_v0/artifacts/system_prompt.md`, `starter_v0/artifacts/tools.yaml` |
 | C — Tool mới + unit test | Viết `wikipedia`, đăng ký registry, 23 unit test (10 hàm test) | `starter_v0/tools/wikipedia/`, `starter_v0/tests/test_tools_todo.py` |
-| D — Eval nhóm + UI + demo | 10 eval case, UI FastAPI + OpenUI, transcript, Phần A + poster | `starter_v0/data/eval_group.json`, `starter_v0/ui_server.py`, `starter_v0/ui/`, `report/team/` |
+| D — Eval nhóm + UI + demo | 10 eval case, UI Streamlit (`app.py`) có streaming token thật, transcript, Phần A | `starter_v0/data/eval_group.json`, `starter_v0/app.py`, `starter_v0/streaming.py`, `starter_v0/transcripts/`, `report/team/` |
 
 ## 7. Hạn chế và hướng cải thiện — B6. Reflection
 
@@ -158,8 +158,7 @@ Chi tiết đóng góp của từng thành viên nằm trong [TEAM.md](../../TEA
 ## 8. Tài liệu tham khảo
 - Bài giảng môn Prompt Engineering (Day 03).
 - Tài liệu API của OpenRouter, Wikipedia.
-- **OpenUI** — https://github.com/thesysdev/openui (MIT). Dùng `@openuidev/react-ui` để sinh component library và OpenUI Lang prompt cho UI, `@openuidev/browser-bundle` để render UI trên trình duyệt không cần bước build.
-- **FastAPI** — https://fastapi.tiangolo.com · **Uvicorn** — https://www.uvicorn.org · **Streamlit** — https://streamlit.io (UI của nhóm).
+- **Streamlit** — https://streamlit.io (Apache-2.0) — UI của nhóm (`app.py`, gồm `st.chat_message`, `st.write_stream` cho streaming).
 - **Wikipedia REST API** — https://en.wikipedia.org/w/rest.php/v1/search/page (nguồn dữ liệu cho tool `wikipedia` của nhóm).
 - **Cloudflare Tunnel** — https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/downloads/ (đưa UI local ra link public cho team khác thử).
 - Tài liệu của lab: [README.md](../../README.md) · [RUBRIC.md](../../RUBRIC.md) · [CHECKPOINTS.md](../../CHECKPOINTS.md) · [docs/TOOL-SETUP.md](../../docs/TOOL-SETUP.md)

@@ -4,7 +4,7 @@
 
 - Họ tên: Vũ Văn Trường
 - MSSV: 2A202603910
-- Email: tini.vu.0@gmail.com
+- Email: 26ai.truongvv@vinuni.edu.vn
 - GitHub: `Sz3RO`
 - Phần việc phụ trách: **CP4 — Eval của nhóm** và **CP5 — UI + demo** (mục 2 và 3 bên dưới)
 
