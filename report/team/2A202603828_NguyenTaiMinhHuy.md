@@ -8,7 +8,7 @@
 - **Email:** nguyentaiminhhuy831975@gmail.com
 - **Nhóm:** 4B
 - **Vai trò:** Nhóm trưởng (Team Leader)
-- **Bài Lab:** Day 03 – Research Agent Tool Eval
+- **Bài Lab:** Day 03 - Research Agent Tool Eval
 
 ## 2. Phần việc phụ trách
 
@@ -161,7 +161,7 @@ Cả hai đều liên quan đến cách Agent sử dụng công cụ `clarify`, 
 
 #### Version v3
 
-Ở phiên bản v3, nhóm tiếp tục bổ sung hướng dẫn sử dụng `clarify`, đồng thời tích hợp khai báo Wikipedia Tool do Văn Trường phát triển.
+Ở phiên bản v3, nhóm tiếp tục bổ sung hướng dẫn sử dụng, đồng thời tích hợp khai báo Wikipedia Tool phát triển.
 
 Mình chạy lại Evaluation và nhận được kết quả **20/20 cases PASS**, tương đương **100% Case Accuracy**.
 
@@ -223,8 +223,7 @@ Sau đó, mình ghi nhận những thông tin cần thiết vào Version Log đ�
 | v0 | N/A | 70% |
 | v1 | 70% | 80% |
 | v2 | 80% | 90% |
-| v3 | 90% | 95% |
-| v4 | 95% | 100% |
+| v3 | 90% | 100% |
 
 Mình cũng kiểm tra lại file CSV bằng PowerShell để đảm bảo các phiên bản được đọc đúng và không bị lỗi định dạng.
 
@@ -322,7 +321,7 @@ Ngoài ra, mình không đưa API Key hoặc nội dung file `.env` vào báo c�
 
 ## 5. Tự đánh giá
 
-Qua bài Lab Day 03 – Research Agent Tool Eval, mình hiểu rõ hơn cách một AI Agent sử dụng những công cụ bên ngoài thông qua Tool Calling, cũng như cách kiểm tra xem Agent có đang sử dụng những công cụ đó đúng hay không.
+Qua bài Lab Day 03 - Research Agent Tool Eval, mình hiểu rõ hơn cách một AI Agent sử dụng những công cụ bên ngoài thông qua Tool Calling, cũng như cách kiểm tra xem Agent có đang sử dụng những công cụ đó đúng hay không.
 
 Ban đầu, mình nghĩ rằng chỉ cần Agent kết nối được với API và gọi được Tool là đã gần như hoàn thành. Tuy nhiên, sau khi chạy Evaluation, mình nhận ra rằng có khá nhiều vấn đề cần quan tâm, chẳng hạn như Agent có chọn đúng Tool không, Arguments có chính xác không, có biết hỏi lại khi thiếu thông tin hay không và có xử lý đúng những yêu cầu cần xác nhận trước khi thực hiện hay không.
 
@@ -338,4 +337,4 @@ Về kỹ năng làm việc nhóm, mình học được cách theo dõi tiến �
 
 Mình nghĩ điểm mình cần cải thiện là khả năng tự đọc và phân tích Run JSON sâu hơn, cũng như chủ động thiết kế thêm những test cases mới thay vì chỉ sử dụng bộ Evaluation đã có sẵn. Ngoài ra, mình cũng muốn hiểu rõ hơn cách kiểm tra hoạt động của các Tool với API thật, vì việc chọn đúng Tool trong Evaluation chưa có nghĩa là dữ liệu thực tế luôn được lấy thành công.
 
-**Kết luận:** Với vai trò nhóm trưởng, mình đã trực tiếp thực hiện việc thiết lập môi trường, kiểm tra Provider Preflight, chạy Baseline v0 và Evaluation v1–v4, cập nhật Version Log và kiểm tra Tool Contract của Wikipedia Tool. Qua những công việc này, mình hiểu rõ hơn quy trình kiểm thử và cải thiện AI Agent dựa trên kết quả thực tế, đồng thời có thêm kinh nghiệm trong việc phối hợp và quản lý công việc nhóm.
+**Kết luận:** Với vai trò nhóm trưởng, mình đã trực tiếp thực hiện việc thiết lập môi trường, kiểm tra Provider Preflight, chạy Baseline v0 và Evaluation v1-v4, cập nhật Version Log và kiểm tra Tool Contract của Wikipedia Tool. Qua những công việc này, mình hiểu rõ hơn quy trình kiểm thử và cải thiện AI Agent dựa trên kết quả thực tế, đồng thời có thêm kinh nghiệm trong việc phối hợp và quản lý công việc nhóm.
