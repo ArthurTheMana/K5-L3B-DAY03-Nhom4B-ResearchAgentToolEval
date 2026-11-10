@@ -124,7 +124,7 @@ Cả 3 transcript sinh bằng `python chat.py --provider openrouter --version v3
 
 | Item | Evidence File | What Worked | Risk / Guardrail |
 |---|---|---|---|
-| Tool mới (`tools/wikipedia/`) | `tools/wikipedia/tool.py`, `TOOL.md` | Lấy được định nghĩa chính xác từ Wikipedia. | Model có thể nhầm lẫn giữa tìm tin tức (`lookup`) và tìm khái niệm (`wikipedia`). |
+| Tool mới (`tools/wikipedia/`) | `tools/wikipedia/tool.py`, `TOOL.md` | Lấy được định nghĩa chính xác từ Wikipedia. Model route đúng: group v3 **3/3 case `wikipedia` PASS** (G01, G08, G10) | Model có thể nhầm lẫn giữa tìm tin tức (`lookup`) và tìm khái niệm (`wikipedia`). Đã kiểm chứng: base v3 (bản đầu tiên có `wikipedia`) **0 case gọi nhầm**, R08/R09/R14 (không được gọi tool) đều PASS |
 | Unit test tool mới (≥ 3 test/tool) | `starter_v0/tests/test_tools_todo.py` (mục `wikipedia`); output: `starter_v0/analysis/pytest_wikipedia.txt` — **23 passed** (10 hàm test, có parametrize), contract test `wikipedia` 5/5, toàn suite **90 passed, 0 failed** | Phủ đủ 3 nhóm: **happy path** (request đúng URL/params/`User-Agent`, map response thành `items`, `lang="vi"` gọi `vi.wikipedia.org`); **input xấu từ model** (query rỗng/`None`/số → trả error dict và **không gửi request**; `lang` ngoài enum → `en`; `limit="5"`/`50`/`-3` được ép kiểu và kẹp 1–10); **nhánh lỗi** (HTTP 403/429/500, timeout → error dict, payload lạ → `items: []`) | Tool **không bao giờ raise**: mọi lỗi đều trả error dict để agent không crash. Test chạy **offline** (mock mạng bằng `fake_http`, không tốn credit). Mỗi test assert cả request gửi đi lẫn kết quả trả về |
 | UI (lệnh chạy + link dùng thử) | `app.py`, link Tunnel | Giao diện hoạt động trơn tru, người ngoài có thể chat live. | Link Tunnel tạm thời, sẽ chết khi ngắt kết nối `cloudflared`. |
 
@@ -156,3 +156,8 @@ Chi tiết đóng góp của từng thành viên nằm trong [TEAM.md](../../TEA
 ## 8. Tài liệu tham khảo
 - Bài giảng môn Prompt Engineering (Day 03).
 - Tài liệu API của OpenRouter, Wikipedia.
+- **OpenUI** — https://github.com/thesysdev/openui (MIT). Dùng `@openuidev/react-ui` để sinh component library và OpenUI Lang prompt cho UI, `@openuidev/browser-bundle` để render UI trên trình duyệt không cần bước build.
+- **FastAPI** — https://fastapi.tiangolo.com · **Uvicorn** — https://www.uvicorn.org · **Streamlit** — https://streamlit.io (UI của nhóm).
+- **Wikipedia REST API** — https://en.wikipedia.org/w/rest.php/v1/search/page (nguồn dữ liệu cho tool `wikipedia` của nhóm).
+- **Cloudflare Tunnel** — https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/downloads/ (đưa UI local ra link public cho team khác thử).
+- Tài liệu của lab: [README.md](../../README.md) · [RUBRIC.md](../../RUBRIC.md) · [CHECKPOINTS.md](../../CHECKPOINTS.md) · [docs/TOOL-SETUP.md](../../docs/TOOL-SETUP.md)

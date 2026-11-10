@@ -1,7 +1,7 @@
 tools:
   # ---------------- Core tools ----------------
   - name: clarify
-    description: "Gửi một câu hỏi cho người dùng. DÙNG KHI yêu cầu mơ hồ, thiếu URL, thiếu tên tài khoản, hoặc xin xác nhận. BẮT BUỘC set tham số response_type. QUAN TRỌNG: Bất cứ khi nào user yêu cầu 'đăng' hoặc 'gửi' (lên Telegram, mạng xã hội...), bạn PHẢI LUÔN gọi clarify với response_type='yes_no' (ví dụ: 'Bạn có chắc chắn muốn đăng không?'), KỂ CẢ KHI họ chưa cung cấp nội dung. Các trường hợp thiếu thông tin thông thường khác mới dùng 'text'."
+    description: "Gửi một câu hỏi cho người dùng. DÙNG KHI yêu cầu còn mơ hồ, thiếu URL, thiếu tên tài khoản, thiếu nội dung, hoặc chưa có phê duyệt rõ ràng cho thao tác gửi/đăng. BẮT BUỘC set tham số response_type. Với yêu cầu gửi/đăng, hãy kiểm tra toàn bộ lịch sử hội thoại: chỉ gọi clarify với response_type='yes_no' nếu người dùng CHƯA phê duyệt rõ ràng; nếu người dùng đã xác nhận bằng các câu như 'đồng ý', 'gửi đi', 'đăng đi' sau khi nội dung đã được chuẩn bị, KHÔNG hỏi lại và phải gọi send với confirmed=true. Các trường hợp thiếu thông tin thông thường khác dùng response_type='text'."
     parameters:
       type: object
       properties:
