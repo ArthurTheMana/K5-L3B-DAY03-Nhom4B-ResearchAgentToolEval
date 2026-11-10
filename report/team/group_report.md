@@ -218,7 +218,9 @@ Cả 3 transcript đều được sinh bằng `python chat.py --provider openrou
 |---|---|---|---|
 | Tool mới `wikipedia` | `starter_v0/tools/wikipedia/tool.py`, `starter_v0/tools/wikipedia/TOOL.md` | Tra cứu kiến thức nền qua Wikipedia REST API, **không cần API key**; trả `items` cùng shape với `lookup`/`fetch` nên đưa thẳng vào `format` | Query rỗng/sai kiểu, HTTP lỗi, timeout → trả **error dict**, không raise. Header `User-Agent` bắt buộc (Wikipedia trả 403 nếu thiếu) |
 | Unit test tool mới (≥ 3 test/tool) | `starter_v0/tests/test_tools_todo.py` — `pytest` → **90 passed, 0 failed, 14 skipped** | 3 test wikipedia: happy path (URL + `User-Agent` + mapping item), `lang="vi"` dùng host `vi.wikipedia.org`, nhánh lỗi trả error dict | Test dùng fixture `fake_http` — **không gọi mạng thật, không tốn credit** |
-| UI (lệnh chạy + link dùng thử) | `starter_v0/ui_server.py`, `starter_v0/ui/index.html`, `starter_v0/ui/app.css`, `docs/UI-DEPLOY.md` | FastAPI + OpenUI Lang: SSE stream từng tool call, render component thật (bảng/card/callout/chart). Lệnh: `uvicorn ui_server:app --port 8000` | **2 pha**: pha 1 chạy agent y hệt `chat.py` nên hành vi trên UI khớp eval; pha 2 chỉ là lớp trình bày. UI không có API key riêng — dùng chung `.env` của starter |
+| UI (lệnh chạy + link dùng thử) | `starter_v0/ui_server.py`, `starter_v0/ui/index.html`, `starter_v0/ui/app.css`, `docs/UI-DEPLOY.md` | FastAPI + OpenUI Lang: SSE stream từng tool call, render component thật (tiêu đề, accordion section có citation, follow-up, sources). Lệnh: `uvicorn ui_server:app --port 8000`. Đã kiểm chứng end-to-end: tool `wikipedia` trả dữ liệu thật → agent sinh chương trình OpenUI Lang → renderer hiện đầy đủ component | **2 pha**: pha 1 chạy agent y hệt `chat.py` nên hành vi trên UI khớp eval; pha 2 chỉ là lớp trình bày. UI không có API key riêng — dùng chung `.env` của starter |
+
+Test cho backend UI: `starter_v0/scripts/test_ui_server.py` → **6/6 PASS** (`python scripts/test_ui_server.py`, hoặc `pytest scripts/test_ui_server.py`). Test cover: hàm `wrap_bare_section_items()` (bọc `SectionItem` vào `SectionBlock`, không đụng chương trình đã đúng, tách chuỗi có dấu phẩy bên trong) và luồng SSE `/api/chat` đầy đủ với fake provider — **không cần API key, không gọi mạng**.
 
 Tool unit tests: **3 test** cho tool `wikipedia`. Ví dụ lỗi mà unit test bắt được nhưng eval không bắt được: nếu tool thiếu header `User-Agent`, Wikipedia trả **HTTP 403** và mọi call `wikipedia` sẽ rỗng — nhưng eval chỉ chấm *"model có gọi đúng tool với đúng args"*, nên eval vẫn báo PASS dù tool thất bại. Test `test_wikipedia_sends_query_with_user_agent_and_maps_pages` assert trực tiếp header này, nên bắt được lỗi đó.
 
@@ -304,6 +306,16 @@ Trong transcript `v3_openrouter_20261110T185012964883.transcript.json`, ở lư�
 **10. Thiếu API key cho tool `timeline` / `lookup` trong lúc chạy live chat.**
 `TAVILY_API_KEY`, `FIRECRAWL_API_KEY`, `RAPIDAPI_KEY` đang rỗng trong `.env`, nên `timeline` và `lookup` trả error dict.
 → Xử lý: agent **báo lỗi thật và không bịa kết quả** — đây đúng là hành vi rubric C6 đòi ("UI che lỗi tool thì không tính"). Transcript vẫn dùng được làm bằng chứng vì phần cần chứng minh là *routing + hỏi lại + xác nhận*, không phải nội dung tool. Khi demo, điền đủ key sẽ có kết quả thật.
+
+**11. OpenUI: nội dung chính bị mất khi model đặt `SectionItem` sai chỗ.**
+Lần đầu chạy UI, phần lớn câu trả lời **không hiện** — chỉ còn tiêu đề *"Related Queries"* và các follow-up. Nguyên nhân: `SectionItem` chỉ render được khi nằm **bên trong** `SectionBlock`; model (đặt `SectionItem` trực tiếp vào `Card`) làm parser *"permissive"* bỏ qua nó.
+→ Thử 1: thêm rule vào OpenUI prompt (*"KHÔNG đặt `SectionItem` trực tiếp vào `Card`"*) — **model nhỏ không tuân theo**, vẫn sai.
+→ Thử 2: dùng model mạnh hơn cho pha trình bày — tốn credit, không bảo đảm.
+→ Xử lý cuối: **sửa ở backend** — hàm `wrap_bare_section_items()` trong `ui_server.py` tự động gom các `SectionItem` đặt trực tiếp trong `Card` vào một `SectionBlock`. Có 3 unit test riêng cho hàm này trong `scripts/test_ui_server.py`. Sau khi sửa, UI hiển thị đầy đủ: tiêu đề, 3 mục dạng accordion (mục đầu mở sẵn, có citation `[1]`), follow-up và sources.
+
+**12. CSS: nền tối làm chữ OpenUI không đọc được.**
+`.msg-assistant .bubble` (2 class) có độ ưu tiên cao hơn `.bubble-ui` (1 class), nên nền trắng của vùng render bị ghi đè bằng nền tối, trong khi component OpenUI dùng theme sáng → chữ gần như vô hình.
+→ Sửa bằng cách nâng độ ưu tiên rule: `.msg-assistant .bubble-ui`.
 
 ## 6. Tổng hợp đóng góp
 

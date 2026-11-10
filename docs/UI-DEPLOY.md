@@ -15,6 +15,7 @@ starter_v0/
   scripts/
     gen_openui_prompt.mjs # sinh lại openui_prompt.md + spec.json (chỉ khi đổi lib)
     smoke_ui.py           # test backend không cần API key
+    test_ui_server.py     # unit test backend (6 test, không cần API key)
 ```
 
 ## 1. Chạy local
@@ -37,7 +38,8 @@ Lệnh hữu ích:
 
 ```bash
 uvicorn ui_server:app --reload --port 8000   # tự reload khi sửa code
-python scripts/smoke_ui.py                    # test backend, không cần API key
+python scripts/smoke_ui.py                    # smoke test backend, không cần API key
+python scripts/test_ui_server.py              # unit test backend (6 test), không cần API key
 ```
 
 ## 2. Link dùng thử cho team khác — Cloudflare Tunnel
@@ -131,6 +133,24 @@ node scripts/gen_openui_prompt.mjs
 ```
 
 Script sẽ ghi lại `starter_v0/ui/openui_prompt.md` + `starter_v0/ui/spec.json`.
+
+Script còn thêm **rule riêng của nhóm** vào prompt (biến `teamRules`):
+
+- `SectionItem` chỉ được đặt bên trong `SectionBlock`; nội dung chính dùng `TextContent`.
+- `CardHeader` ở đầu `Card`, `FollowUpBlock` và khối sources ở cuối.
+
+Lưu ý khi sửa script: `additionalRules` phải đặt **sau** `...openuiChatPromptOptions`,
+nếu không `promptOptions` của thư viện sẽ ghi đè và rule của nhóm bị mất.
+
+## 5.1 Vì sao backend còn có `wrap_bare_section_items()`
+
+Dù prompt đã có rule, model nhỏ (`gpt-4o-mini`) vẫn hay đặt `SectionItem` trực tiếp
+vào `Card`. Parser của OpenUI là *"permissive"* nên nó **bỏ qua** các `SectionItem`
+đó, khiến phần nội dung chính biến mất trên UI (chỉ còn tiêu đề *"Related Queries"*).
+
+Vì vậy backend tự sửa: hàm `wrap_bare_section_items()` gom các `SectionItem` đặt
+trực tiếp trong `Card` vào một `SectionBlock` trước khi gửi xuống trình duyệt.
+Có unit test riêng trong `scripts/test_ui_server.py`.
 
 ## 6. Những gì UI hiển thị (để demo)
 

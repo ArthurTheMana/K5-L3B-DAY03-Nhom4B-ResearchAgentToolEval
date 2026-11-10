@@ -46,11 +46,24 @@ const preamble = [
   "Chi dung cac component duoc phep trong component library nay.",
 ].join(" ");
 
+// Rule rieng cua nhom (them vao rule mac dinh cua thu vien).
+// - SectionItem chi render duoc khi nam BEN TRONG SectionBlock. Parser cua
+//   OpenUI "permissive": SectionItem dat truc tiep vao Card se bi bo qua,
+//   chi con lai tieu de "Related Queries" va mat phan noi dung chinh.
+//   => yeu cau model dung TextContent cho noi dung chinh, SectionBlock cho muc.
+const teamRules = [
+  "NOI DUNG CHIN: dung TextContent(...) truc tiep trong Card. KHONG dung SectionItem truc tiep trong Card.",
+  "SectionItem chi duoc dat BEN TRONG SectionBlock(sections: [...]). Neu can nhieu muc con, hay gom chung mot SectionBlock.",
+  "CardHeader la phan dau tien cua Card, FollowUpBlock va cac khoi sources dat cuoi Card.",
+].join("\n");
+
 const prompt = library.prompt({
-  preamble,
-  additionalRules: openuiChatAdditionalRules,
-  examples: openuiChatExamples,
   ...openuiChatPromptOptions,
+  preamble,
+  // `additionalRules` phai dat SAU `...openuiChatPromptOptions`, neu khong
+  // promptOptions cua thu vien se ghi de va rule cua nhom bi mat.
+  additionalRules: [teamRules, ...(openuiChatPromptOptions.additionalRules ?? [])],
+  examples: openuiChatExamples,
 });
 
 writeFileSync(resolve(outDir, "openui_prompt.md"), prompt, "utf8");

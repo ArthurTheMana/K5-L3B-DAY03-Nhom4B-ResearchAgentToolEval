@@ -439,6 +439,9 @@ Before finishing, walk your output and verify:
 1. root = Card(...) is the FIRST line (for optimal streaming).
 2. Every referenced name is defined. Every defined name (other than root) is reachable from root.
 
+- NOI DUNG CHIN: dung TextContent(...) truc tiep trong Card. KHONG dung SectionItem truc tiep trong Card.
+SectionItem chi duoc dat BEN TRONG SectionBlock(sections: [...]). Neu can nhieu muc con, hay gom chung mot SectionBlock.
+CardHeader la phan dau tien cua Card, FollowUpBlock va cac khoi sources dat cuoi Card.
 - When asked about data, generate realistic/plausible data
 - Every response is a single Card(children) — children stack vertically automatically. No layout params are needed on Card.
 - Card is the only layout container. Do NOT use Stack. Use Tabs to switch between sections, Carousel for horizontal scroll.

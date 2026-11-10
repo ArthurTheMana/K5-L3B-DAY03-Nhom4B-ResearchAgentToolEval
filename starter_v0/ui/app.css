@@ -156,12 +156,14 @@ html, body {
   border: 1px solid var(--line);
   max-width: 92%;
 }
-/* OpenUI component library dùng theme sang (data-openui-theme="light").
-   nen nen sang de noi dung render doc duoc. */
-.bubble-ui {
+/* OpenUI component library dung theme sang (data-openui-theme="light").
+   Nen nen sang de noi dung render doc duoc.
+   Phai dung `.msg-assistant .bubble-ui` de thang `.msg-assistant .bubble` ve do do uu tien. */
+.msg-assistant .bubble-ui {
   white-space: normal;
   background: #ffffff;
   color: #161616;
+  border-color: #d0d7de;
 }
 
 /* ---------------- Tool call cards ---------------- */

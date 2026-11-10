@@ -142,6 +142,111 @@ def openui_prompt() -> str:
     return _openui_prompt_cache
 
 
+def _split_top_level(text: str) -> list[str]:
+    """Tach mot mang theo dau phay o cap 0 (bo qua dau phay nam trong ngoac/nhay)."""
+    parts: list[str] = []
+    depth = 0
+    current: list[str] = []
+    in_string = False
+    quote = ""
+    for ch in text:
+        if in_string:
+            current.append(ch)
+            if ch == quote:
+                in_string = False
+            continue
+        if ch in "\"'":
+            in_string = True
+            quote = ch
+            current.append(ch)
+            continue
+        if ch in "([{":
+            depth += 1
+        elif ch in ")]}":
+            depth -= 1
+        if ch == "," and depth == 0:
+            parts.append("".join(current).strip())
+            current = []
+            continue
+        current.append(ch)
+    tail = "".join(current).strip()
+    if tail:
+        parts.append(tail)
+    return parts
+
+
+def _match_bracket(text: str, start: int) -> int:
+    """Tra ve chi so dau ']' dong ung voi '[' tai `start`."""
+    depth = 0
+    in_string = False
+    quote = ""
+    for i in range(start, len(text)):
+        ch = text[i]
+        if in_string:
+            if ch == quote:
+                in_string = False
+            continue
+        if ch in "\"'":
+            in_string = True
+            quote = ch
+            continue
+        if ch == "[":
+            depth += 1
+        elif ch == "]":
+            depth -= 1
+            if depth == 0:
+                return i
+    return -1
+
+
+def wrap_bare_section_items(program: str) -> str:
+    """Gom cac `SectionItem` dat truc tiep trong Card vao mot `SectionBlock`.
+
+    Ly do: parser cua OpenUI la "permissive" — `SectionItem` chi render duoc
+    khi nam BEN TRONG `SectionBlock`. Neu model dat `SectionItem` truc tiep vao
+    Card, parser bo qua no va phan noi dung chinh bien mat (chi con tieu de
+    "Related Queries"). Model nho (gpt-4o-mini) hay sai cho nho nay du prompt
+    co rule, nen sua o backend cho chac chan.
+    """
+    item_names = set(re.findall(r"^\s*(\w+)\s*=\s*SectionItem\(", program, re.MULTILINE))
+    if not item_names:
+        return program
+
+    root_match = re.search(r"^(\s*)root\s*=\s*Card\(\s*\[", program, re.MULTILINE)
+    if not root_match:
+        return program
+
+    array_start = program.index("[", root_match.end() - 1)
+    array_end = _match_bracket(program, array_start)
+    if array_end < 0:
+        return program
+
+    children = _split_top_level(program[array_start + 1 : array_end])
+    bare = [child for child in children if child in item_names]
+    if not bare:
+        return program
+
+    block_name = "__sectionsBlock"
+    new_children: list[str] = []
+    inserted = False
+    for child in children:
+        if child in item_names:
+            if not inserted:
+                new_children.append(block_name)
+                inserted = True
+            continue
+        new_children.append(child)
+
+    block_line = f"{block_name} = SectionBlock([{', '.join(bare)}])\n"
+
+    root_line_start = root_match.start()
+    return program[:root_line_start] + block_line + program[root_line_start:].replace(
+        "[" + ", ".join(children) + "]",
+        "[" + ", ".join(new_children) + "]",
+        1,
+    )
+
+
 def render_openui(
     provider: Any,
     raw_answer: str,
@@ -187,7 +292,7 @@ def render_openui(
     # Chi nhan "answer" (khong phai tool call) va phai la chuong trinh OpenUI.
     if response.tool_calls or not re.search(r"^\s*root\s*=", text, re.MULTILINE):
         return ""
-    return text
+    return wrap_bare_section_items(text)
 
 
 # ---------------------------------------------------------------------------
