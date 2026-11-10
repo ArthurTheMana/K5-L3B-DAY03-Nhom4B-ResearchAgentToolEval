@@ -79,8 +79,25 @@ Liệt kê đúng 10 case trong `starter_v0/data/eval_group.json` (5 single turn
 
 | Case ID | What It Tests | Expected Tool/Behavior | Result |
 |---|---|---|---|
-| [Thành viên D điền ID 1-10] | [Mô tả test, phải có 1 test cho wikipedia] | [Expected tool_calls] | [Pass/Fail] |
-| ... | ... | ... | ... |
+| G01_wikipedia_background_fact | Kiến thức nền (tổng quan khái niệm) → `wikipedia`, không dùng `lookup`/`papers` | `wikipedia` | **PASS** — gọi `wikipedia` |
+| G02_wikipedia_vs_lookup_news | Sự kiện có thời điểm → `lookup(topic=news, timeframe=day)`, **không** dùng `wikipedia` | `lookup` | **PASS** — gọi `lookup(topic=news, timeframe=day)` |
+| G03_missing_wikipedia_topic | Thiếu đối tượng tra cứu → phải `clarify`, không tự đoán | `clarify(response_type=text)` | **PASS** — gọi `clarify` |
+| G04_greeting_no_tool | Lời cảm ơn → trả lời thẳng, không gọi tool nào (kể cả `send`) | `no_tool` | **PASS** — không gọi tool nào |
+| G05_out_of_scope_creative_writing | Yêu cầu sáng tác văn học ngoài phạm vi research | `no_tool` (refuse) | **PASS** — không gọi tool nào |
+| G06_switch_wikipedia_to_web_news | 3 lượt: đổi nguồn wikipedia→web, khóa `timeframe=day`, `topic=news` | `lookup` | **PASS** — gọi `lookup(topic=news, timeframe=day)` |
+| G07_missing_url_then_fetch | 3 lượt: thiếu URL → lượt 2 cấp URL → chỉ đọc link đó | `fetch(url=…)` | **PASS** — gọi `fetch(url=…)` đúng link |
+| G08_wikipedia_carryover_query | 3 lượt: giữ tool wikipedia, đổi query, yêu cầu bản tiếng Việt | `wikipedia(query="học máy", lang="vi")` | **PASS** — gọi `wikipedia(query="học máy", lang="vi")` |
+| G09_confirmed_send_boundary | 3 lượt: user đã xác nhận rõ → agent phải hành động `confirmed=true`, không hỏi lại | `send(confirmed=true)` | **PASS** — gọi `send(confirmed=true)` |
+| G10_wikipedia_plus_news_parallel | 3 lượt: cần cả kiến thức nền lẫn tin mới → gọi **cả hai** tool | `wikipedia` + `lookup(topic=news)` | **PASS** — gọi cả `wikipedia` **và** `lookup(topic=news)` |
+
+**Kết quả run:** `case_accuracy = 1.00` (10/10 PASS), `tool_routing_accuracy = 1.00`, `argument_accuracy = 1.00`, `multiturn_accuracy = 1.00`, `provider_error_cases = 0`, `measured_cases = 10/10` — run hợp lệ theo quy tắc chấm.
+
+- Run file: `starter_v0/runs/v3_B_group_openrouter_20261110T184843874713.json`
+- Provider/model: `openrouter` / `openai/gpt-4o-mini` (cùng model với v0–v3)
+- Artifact version: `v3+p8b1d8369242a+tff4501744c70` (khớp dòng v3 trong `version_log.csv`)
+- Lệnh tái lập: `python run_eval.py --provider openrouter --version v3 --suite group --eval-cases data/eval_group.json`
+
+Bộ 10 case phủ đủ 6 loại lỗi của `allowed_failure_types` và có **3 case route tới tool mới `wikipedia`** (G01, G08, G10).
 
 ### B4. Live Chat Evidence
 
@@ -88,9 +105,20 @@ Lấy từ `starter_v0/transcripts/*.transcript.json`.
 
 | Turn | User Request | Tool Calls | Version Evidence | Outcome |
 |---|---|---|---|---|
-| [Turn 1] | [Thành viên D điền: Yêu cầu research thông thường] | [lookup / fetch / wikipedia] | v3 | [Agent trả về kết quả đúng yêu cầu] |
-| [Turn 2] | [Thành viên D điền: Yêu cầu bị thiếu URL hoặc handle] | `clarify` | v3 | [Agent hỏi lại chuẩn xác] |
-| [Turn 3] | [Thành viên D điền: Yêu cầu đăng/gửi bài] | `clarify` (yes_no) | v3 | [Agent xin xác nhận trước khi send] |
+| [Turn 1] | "Cho mình tổng quan trên Wikipedia về blockchain" | `wikipedia(query="Blockchain", lang="en")` | v3 (`artifact_version = v3+p8b1d8369242a+tff4501744c70`) | Agent trả về 3 mục từ Wikipedia kèm link thật (`Blockchain`, `Cryptocurrency`, `Fork (blockchain)`) |
+| [Turn 2] | "Tóm tắt 5 tweet mới nhất giúp mình" | *(không gọi tool)* | v3 | Agent **hỏi lại** vì thiếu tên tài khoản: *"Bạn vui lòng cung cấp tên tài khoản Twitter…"*, không đoán bừa |
+| [Turn 3] | "Của Elon Musk nhé" | `timeline(screenname="elonmusk", limit=5)` | v3 | Agent dùng đúng handle và giữ `limit=5` từ lượt trước; tool báo lỗi vì thiếu `RAPIDAPI_KEY` và agent **báo lỗi thật, không bịa kết quả** |
+| [Turn 4] | "Đăng bản tin đó lên Telegram cho tôi" | `clarify(response_type="yes_no")` | v3 | Agent **xin xác nhận trước khi gửi**: *"Bạn có thể xác nhận nội dung bản tin…?"*, chưa gọi `send` |
+
+**Transcript chính:** `starter_v0/transcripts/v3_openrouter_20261110T185012964883.transcript.json` — 4 lượt, provider `openrouter`, model `openai/gpt-4o-mini`.
+
+Hai transcript bổ sung (cùng version v3):
+- `v3_openrouter_20261110T184912065678.transcript.json` — 4 lượt: wikipedia → hỏi lại → timeline → lookup.
+- `v3_openrouter_20261110T184936514496.transcript.json` — 1 lượt: yêu cầu đăng Telegram → `clarify(response_type="yes_no")`.
+
+Cả 3 transcript sinh bằng `python chat.py --provider openrouter --version v3` và đã commit vào repo.
+
+> ⚠️ Một hạn chế quan sát được: ở lượt 2 agent hỏi lại bằng **text** chứ không gọi tool `clarify`, vì `chat.py` không ép `tool_choice`; còn `run_eval.py` thì ép `tool_choice="required"` cho các case cần gọi tool. Đây là khác biệt giữa *hành vi thật khi chat* và *hành vi được chấm tự động* — eval không đo được lỗi "hỏi lại nhưng không dùng tool", nên cần đọc transcript thủ công.
 
 ### B5a. Required Evidence — Tool mới, unit test, UI
 
