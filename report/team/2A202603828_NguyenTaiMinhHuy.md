@@ -132,7 +132,7 @@ Mình sử dụng cùng bộ 20 test cases để có thể so sánh kết quả 
 | Tool Routing Accuracy | 75% | 100% | 100% | 100% |
 | Argument Accuracy | 70% | 80% | 90% | 100% |
 | Multiturn Accuracy | 100% | 100% | 100% | 100% |
-| Provider Error Cases | 0 | 0 | 0 | 0 | 0 |
+| Provider Error Cases | 0 | 0 | 0 | 0 |
 
 #### Version v1
 
@@ -161,11 +161,13 @@ Cả hai đều liên quan đến cách Agent sử dụng công cụ `clarify`, 
 
 #### Version v3
 
-Ở phiên bản v3, nhóm tiếp tục bổ sung hướng dẫn sử dụng, đồng thời tích hợp khai báo Wikipedia Tool phát triển.
+Ở phiên bản v3, nhóm tiếp tục cải thiện hướng dẫn sử dụng công cụ `clarify`, đặc biệt là cách lựa chọn `response_type` khi cần hỏi thêm thông tin hoặc xin xác nhận trước khi gửi nội dung. Đồng thời, Wikipedia Tool cũng đã được tích hợp vào Tool Declaration.
 
-Mình chạy lại Evaluation và nhận được kết quả **20/20 cases PASS**, tương đương **100% Case Accuracy**.
+Trong lần chạy v3 ban đầu, Agent vẫn gặp lỗi ở case `R12_confirm_before_send` do sử dụng `response_type="text"` thay vì `"yes_no"`.
 
-Qua việc kiểm tra Run JSON, mình thấy Agent đã chọn đúng công cụ `clarify`. Đây là một lỗi khá thú vị vì Agent thực ra đã biết cần hỏi lại người dùng, nhưng lại chưa chọn đúng kiểu câu hỏi mà bộ Evaluation yêu cầu.
+Sau khi nhóm cập nhật lại Tool Declaration, mình chạy lại Base Evaluation v3 với cấu hình mới nhất. Kết quả đạt **20/20 cases PASS**, tương đương **100% Case Accuracy**.
+
+Như vậy, so với Baseline v0, Case Accuracy đã tăng từ 70% lên 100%. Mình vẫn giữ kết quả chạy trước đó để có thể đối chiếu và giải thích quá trình cải thiện.
 
 ### 3.4. Phân tích những lỗi gặp phải
 
@@ -269,6 +271,33 @@ Qua quá trình này, mình nhận thấy việc chia công việc giúp nhóm c
 
 Đây cũng là một trong những điều mình rút kinh nghiệm khi đảm nhận vai trò nhóm trưởng.
 
+### 3.8. Chạy Group Evaluation
+
+Sau khi nhóm hoàn thành bộ test riêng trong `data/eval_group.json`, mình tiếp tục chạy Group Evaluation để kiểm tra Agent với những tình huống do nhóm tự thiết kế.
+
+Lệnh mình sử dụng:
+
+    python run_eval.py --provider openrouter --version v3 --suite group --eval-cases data/eval_group.json
+
+Bộ Evaluation gồm 10 test cases, kiểm tra các tình huống như lựa chọn Wikipedia Tool, chuyển đổi giữa các công cụ, xử lý thông tin còn thiếu, hội thoại nhiều lượt và xác nhận trước khi gửi nội dung.
+
+**Kết quả Group Evaluation:**
+
+| Metric | Kết quả |
+|---|---:|
+| Total Cases | 10 |
+| Measured Cases | 10 |
+| Passed Cases | 10 |
+| Case Accuracy | 100% |
+| Tool Routing Accuracy | 100% |
+| Argument Accuracy | 100% |
+| Multiturn Accuracy | 100% |
+| Provider Error Cases | 0 |
+
+Mình cũng kiểm tra kết quả của từng case và xác nhận cả 10 cases đều PASS.
+
+Kết quả này giúp mình có thêm bằng chứng về khả năng sử dụng Tool của Agent trên bộ kiểm thử do nhóm xây dựng. Tuy nhiên, đây vẫn là kết quả Evaluation, chưa thay thế cho việc kiểm thử chức năng thực tế khi các Tool kết nối với API bên ngoài.
+
 ## 4. Bằng chứng
 
 ### 4.1. Các file và kết quả thực hiện
@@ -293,8 +322,15 @@ Qua quá trình này, mình nhận thấy việc chia công việc giúp nhóm c
 - `starter_v0/tools/wikipedia/TOOL.md`
 - `starter_v0/tests/test_tool_contract.py`
 
-**Git Commit / Pull Request:**
+**GitHub Repository:**
 
+https://github.com/ArthurTheMana/K5-L3B-DAY03-Nhom4B-ResearchAgentToolEval
+
+**Báo cáo cá nhân trên GitHub:**
+
+https://github.com/ArthurTheMana/K5-L3B-DAY03-Nhom4B-ResearchAgentToolEval/blob/main/report/team/2A202603828_NguyenTaiMinhHuy.md
+
+**Git Commit:** Bổ sung mã commit thực tế nếu cần đối chiếu lịch sử đóng góp.
 
 
 ### 4.2. AI và công cụ đã sử dụng
