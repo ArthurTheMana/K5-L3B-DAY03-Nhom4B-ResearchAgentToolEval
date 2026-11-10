@@ -1,22 +1,6 @@
-# starter_v0 — tool declarations (intentionally vague).
-# Names and descriptions here are a rough first draft. Routing rules, name->handle
-# mapping, arg conventions (news/timeframe/Top), and the send-confirmation boundary
-# are NOT spelled out anywhere yet. Your job is to make these declarations + the
-# system prompt good enough that the agent routes correctly on the eval.
-#
-# If you rename a tool, keep the name in sync across:
-#   this file  ->  tools/__init__.py (TOOL_FUNCTIONS)  ->  data/eval_base.json + data/eval_research_extension.json
-# `pytest tests/test_tool_contract.py` checks this sync for you.
-#
-# TODO CP2 (student):
-#   - Rewrite every description: what it does, WHEN to use it, WHEN NOT to use it.
-#   - Spell out arg conventions in parameter descriptions (handle format, topic/timeframe, search_type).
-#   - Make the `send` confirmation boundary explicit.
-#   - Declare your new tool(s) at the end of this file.
 tools:
-  # ---------------- Core tools ----------------
   - name: clarify
-    description: "Gửi một câu hỏi cho người dùng."
+    description: "Gửi một câu hỏi cho người dùng. DÙNG KHI yêu cầu mơ hồ, thiếu URL cụ thể, hoặc thiếu tên tài khoản mạng xã hội. KHÔNG DÙNG KHI đã có đủ thông tin để thực hiện lệnh."
     parameters:
       type: object
       properties:
@@ -26,16 +10,16 @@ tools:
       required: [question]
 
   - name: timeline
-    description: "Lấy các bài đăng gần đây."
+    description: "Lấy các bài đăng gần đây từ một tài khoản cụ thể. DÙNG KHI người dùng chỉ định rõ một tài khoản. Tham số screenname KHÔNG BAO GIỜ được chứa dấu '@' (ví dụ: dùng 'elonmusk' thay vì '@elonmusk')."
     parameters:
       type: object
       properties:
-        screenname: {type: string, default: "", description: "Tên tài khoản"}
+        screenname: {type: string, default: "", description: "Tên tài khoản (không có @)"}
         limit: {type: integer, default: 5, description: "Số lượng"}
       required: [screenname]
 
   - name: social_search
-    description: "Tìm trên mạng xã hội."
+    description: "Tìm bài đăng trên mạng xã hội theo từ khóa. DÙNG KHI cần tìm kiếm chủ đề trên mạng xã hội nhưng không chỉ định tài khoản cụ thể. Dùng search_type='Top' cho bài đăng phổ biến nhất, 'Latest' cho bài đăng mới nhất."
     parameters:
       type: object
       properties:
@@ -45,7 +29,7 @@ tools:
       required: [query]
 
   - name: lookup
-    description: "Tra cứu thông tin trên internet."
+    description: "Tra cứu thông tin chung hoặc tin tức trên internet qua search engine. DÙNG KHI cần tìm thông tin mở rộng. Chọn topic='news' cho các sự kiện thời sự và kết hợp với timeframe (day/week/month/year). Chọn topic='general' cho các kiến thức chung. KHÔNG ĐƯA CÁC TỪ 'tin tức' HOẶC 'news' VÀO TRONG BIẾN query."
     parameters:
       type: object
       properties:
@@ -56,15 +40,15 @@ tools:
       required: [query]
 
   - name: fetch
-    description: "Lấy nội dung từ một địa chỉ."
+    description: "Lấy và đọc nội dung toàn văn từ một địa chỉ URL. CHỈ DÙNG KHI có một URL chính xác (bắt đầu bằng http/https)."
     parameters:
       type: object
       properties:
-        url: {type: string, default: "", description: "Địa chỉ"}
+        url: {type: string, default: "", description: "Địa chỉ URL đầy đủ"}
       required: [url]
 
   - name: format
-    description: "Trình bày dữ liệu đã có thành văn bản."
+    description: "Trình bày dữ liệu đã thu thập được thành văn bản markdown digest. DÙNG KHI cần tổng hợp nhiều items để báo cáo."
     parameters:
       type: object
       properties:
@@ -84,14 +68,13 @@ tools:
         headline: {type: string, default: "", description: "Tiêu đề"}
       required: [items, template]
 
-  # ---------------- Bonus tools ----------------
   - name: send
-    description: "Gửi một đoạn văn bản đi."
+    description: "Gửi hoặc đăng một đoạn văn bản (như bản tin, tweet, tin nhắn). KHÔNG BAO GIỜ được gọi tool này nếu người dùng chưa phê duyệt rõ ràng. CHỈ DÙNG KHI người dùng đã xác nhận đồng ý, và phải set tham số confirmed=true."
     parameters:
       type: object
       properties:
-        text: {type: string, default: "", description: "Nội dung"}
-        confirmed: {type: boolean, default: false, description: "Cờ xác nhận"}
+        text: {type: string, default: "", description: "Nội dung cần gửi"}
+        confirmed: {type: boolean, default: false, description: "Cờ xác nhận. Bắt buộc phải là true khi gọi lệnh này."}
       required: [text]
 
   - name: policy
