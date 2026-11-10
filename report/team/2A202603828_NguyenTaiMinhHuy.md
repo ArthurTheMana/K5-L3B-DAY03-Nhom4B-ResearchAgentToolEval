@@ -189,15 +189,9 @@ Khi người dùng yêu cầu tóm tắt tweet hoặc một bài viết nhưng c
 
 Đây là vấn đề liên quan đến việc Agent phải xin xác nhận trước khi thực hiện một hành động như gửi hoặc đăng nội dung.
 
-Trường hợp mình chú ý nhất là `R12_confirm_before_send`. Ở phiên bản v3, Agent đã gọi đúng `clarify` nhưng lại truyền:
+Trường hợp mình chú ý nhất là `R12_confirm_before_send`. Trong lần chạy v3 ban đầu, Agent đã gọi đúng công cụ `clarify` nhưng truyền `response_type="text"` thay vì `response_type="yes_no"` như bộ Evaluation yêu cầu.
 
-    response_type="text"
-
-Trong khi bộ Evaluation mong đợi:
-
-    response_type="yes_no"
-
-Đến v3, case này đã PASS.
+Sau khi nhóm cập nhật Tool Declaration và mình chạy lại v3, case này đã PASS. Điều này giúp mình hiểu rõ hơn sự khác biệt giữa việc chọn đúng Tool và truyền đúng Arguments.
 
 Qua trường hợp này, mình hiểu rằng Tool Calling không chỉ là chọn đúng tên công cụ. Agent còn phải truyền đúng Arguments và xử lý đúng quy trình được yêu cầu.
 
@@ -311,7 +305,9 @@ Kết quả này giúp mình có thêm bằng chứng về khả năng sử dụ
 - `starter_v0/runs/v0_B_base_openrouter_20261110T174407112036.json`
 - `starter_v0/runs/v1_B_base_openrouter_20261110T180213807365.json`
 - `starter_v0/runs/v2_B_base_openrouter_20261110T181404462799.json`
-- `starter_v0/runs/v3_B_base_openrouter_20261111T002233736709.json`
+- **Base Evaluation v3:** `starter_v0/runs/v3_B_base_openrouter_20261111T002233736709.json`
+- **Group Evaluation v3:** `starter_v0/runs/v3_B_group_openrouter_20261111T002352968732.json`
+
 
 **Các file liên quan đến việc kiểm tra tích hợp:**
 
@@ -330,8 +326,12 @@ https://github.com/ArthurTheMana/K5-L3B-DAY03-Nhom4B-ResearchAgentToolEval
 
 https://github.com/ArthurTheMana/K5-L3B-DAY03-Nhom4B-ResearchAgentToolEval/blob/main/report/team/2A202603828_NguyenTaiMinhHuy.md
 
-**Git Commit:** Bổ sung mã commit thực tế nếu cần đối chiếu lịch sử đóng góp.
+**Git Commit / Pull Request:**
 
+1. **Cập nhật báo cáo cá nhân mới nhất:** [Commit 5aa3ab7](https://github.com/ArthurTheMana/K5-L3B-DAY03-Nhom4B-ResearchAgentToolEval/commit/5aa3ab7)
+2. **Cập nhật báo cáo cá nhân trước đó:** [Commit d7936b8](https://github.com/ArthurTheMana/K5-L3B-DAY03-Nhom4B-ResearchAgentToolEval/commit/d7936b8)
+3. **Cập nhật Version Log:** [Commit ba5b553](https://github.com/ArthurTheMana/K5-L3B-DAY03-Nhom4B-ResearchAgentToolEval/commit/ba5b553)
+4. **Cập nhật Base và Group Evaluation v3:** [Commit a37adcb](https://github.com/ArthurTheMana/K5-L3B-DAY03-Nhom4B-ResearchAgentToolEval/commit/a37adcb)
 
 ### 4.2. AI và công cụ đã sử dụng
 
