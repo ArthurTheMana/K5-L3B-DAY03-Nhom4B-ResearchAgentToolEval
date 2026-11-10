@@ -93,7 +93,8 @@ chạy 10/10 của tôi lúc 18:48:
 | `v3_B_group_openrouter_20261110T222856206150.json` | 22:28 | `v3+p8b1d8369242a+t2c78329968e8` | **9/10** — G09 FAIL |
 
 Hai run chỉ khác **mã băm của `tools.yaml`**; `system_prompt.md` giống hệt — nên
-nguyên nhân nằm chắc ở `tools.yaml`.
+nguyên nhân nằm chắc ở `tools.yaml`. (Cả hai run file này sau đó được A dọn khỏi
+`runs/` khi chạy lại v3; nội dung vẫn xem được trong lịch sử git — commit `ee788a5`.)
 
 Bản sửa đó đổi `description` của tool `clarify` thành:
 
@@ -119,6 +120,11 @@ chưa phê duyệt"*), nên model **hỏi lại lần nữa** cả khi user đã
 > trung thực — nên đây là phát hiện để nhóm xử lý, không phải để tôi âm thầm
 > vá cho đẹp số liệu.
 
+**Kết cục:** bạn Vương Quang Thắng (vai trò B) đã sửa `clarify`, bạn Nguyễn Tài
+minh Huy (A) chạy lại cả hai suite lúc 00:22–00:23. Kết quả: base v3 **20/20**
+(1.00, tăng từ 0.95) và group suite **10/10** — hồi quy được xử lý xong, và
+hồi quy trung gian vẫn còn nguyên trong lịch sử git làm bằng chứng cho C3.
+
 ### 3.5 Báo cáo
 
 Tôi viết Phần A (A1/A2/A3). Ở Phần B, tôi phụ trách **B3 (10 case eval của nhóm)** và **B4 (bằng chứng live chat)**; các mục B1/B2/B5a và mục 3, 5, 6, 7, 8 do nhóm trưởng và các bạn khác viết.
@@ -138,7 +144,7 @@ Riêng bảng B2 tôi ghi lại **cả các hồi quy** chứ không chỉ đư�
 | Test thứ tự render + conversation (AppTest) | `starter_v0/scripts/test_render_order.py` |
 | Công cụ dump DOM để kiểm tra thứ tự phần tử | `starter_v0/scripts/dump_dom.py` |
 | Hướng dẫn chạy UI + deploy | `README.md` (mục *"Deploy nhanh để team khác dùng thử"*) |
-| Run eval nhóm | `starter_v0/runs/v3_B_group_openrouter_20261110T184843874713.json` |
+| Run eval nhóm | `starter_v0/runs/v3_B_group_openrouter_20261111T002352968732.json` |
 | Transcript live chat | `starter_v0/transcripts/v3_openrouter_20261110T185012964883.transcript.json` (+ 2 file nữa) |
 | Báo cáo nhóm | `report/team/group_report.md` |
 
@@ -157,8 +163,8 @@ Commit của tôi:
 
 | Hạng mục | Kết quả |
 |---|---|
-| Run eval nhóm (v3 lúc 18:48, `openrouter` / `openai/gpt-4o-mini`) | `case_accuracy = 1.00` (10/10 PASS), `tool_routing = 1.00`, `argument = 1.00`, `multiturn = 1.00`, `provider_error_cases = 0`, `measured_cases = 10/10` — artifact `v3+p8b1d8369242a+**tff4501744c70**` |
-| Run eval nhóm (v3 lúc 22:28, sau khi `tools.yaml` được sửa lúc 19:52) | `case_accuracy = 0.90` (9/10), `provider_error_cases = 0`, `measured_cases = 10/10` — artifact `v3+p8b1d8369242a+**2c78329968e8**`; **G09 FAIL** (`wrong_boundary`) |
+| Run eval nhóm cuối cùng (v3 lúc 00:23, sau khi `tools.yaml` được sửa xong) | `case_accuracy = 1.00` (**10/10 PASS**), `tool_routing = 1.00`, `argument = 1.00`, `multiturn = 1.00`, `provider_error_cases = 0`, `measured_cases = 10/10` — artifact `v3+p`**`ac40825b391a`**`+t`**`ca4674f23b12`** (khớp artifacts hiện tại trong repo) |
+| Run base v3 tương ứng (A chạy lại lúc 00:22) | `case_accuracy = 1.00` (**20/20 PASS**) — tăng từ 0.95, artifact khớp repo |
 | `pytest` toàn repo | **90 passed, 0 failed**, 14 skipped (14 skip là stub của tool có sẵn, thuộc phần việc của bạn C) |
 | `scripts/smoke_streamlit.py` | **PASS** — tool loop gọi đúng `wikipedia`, nhánh `clarify` dừng đúng (`waiting_for_user`), **thứ tự stream** đúng (`tool` → `final`), `chunk_text` giữ nguyên nội dung, transcript ghi/đọc được |
 | `scripts/test_render_order.py` | **PASS** — kiểm tra trên DOM thật (AppTest): 2 lượt → 4 chat message, tool card luôn render **trước** câu trả lời, lịch sử lượt 1 giữ nguyên sang lượt 2, transcript ghi đúng 2 lượt |

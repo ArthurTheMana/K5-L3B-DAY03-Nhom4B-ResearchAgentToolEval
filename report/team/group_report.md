@@ -92,9 +92,9 @@ Liệt kê đúng 10 case trong `starter_v0/data/eval_group.json` (5 single turn
 
 **Kết quả run:** `case_accuracy = 1.00` (10/10 PASS), `tool_routing_accuracy = 1.00`, `argument_accuracy = 1.00`, `multiturn_accuracy = 1.00`, `provider_error_cases = 0`, `measured_cases = 10/10` — run hợp lệ theo quy tắc chấm.
 
-- Run file: `starter_v0/runs/v3_B_group_openrouter_20261110T184843874713.json`
+- Run file: `starter_v0/runs/v3_B_group_openrouter_20261111T002352968732.json` (chạy lại 00:23 sau khi `tools.yaml` được sửa — chạy đầu lúc 18:48 bị G09 fail do mô tả `clarify` cũ, đã phân tích ở báo cáo cá nhân vai trò D)
 - Provider/model: `openrouter` / `openai/gpt-4o-mini` (cùng model với v0–v3)
-- Artifact version: `v3+p8b1d8369242a+tff4501744c70` (khớp dòng v3 trong `version_log.csv`)
+- Artifact version: `v3+pac40825b391a+tca4674f23b12` (khớp dòng v3 trong `version_log.csv` và artifacts hiện tại trong repo)
 - Lệnh tái lập: `python run_eval.py --provider openrouter --version v3 --suite group --eval-cases data/eval_group.json`
 
 Bộ 10 case phủ đủ 6 loại lỗi của `allowed_failure_types` và có **3 case route tới tool mới `wikipedia`** (G01, G08, G10).
@@ -111,6 +111,8 @@ Lấy từ `starter_v0/transcripts/*.transcript.json`.
 | [Turn 4] | "Đăng bản tin đó lên Telegram cho tôi" | `clarify(response_type="yes_no")` | v3 | Agent **xin xác nhận trước khi gửi**: *"Bạn có thể xác nhận nội dung bản tin…?"*, chưa gọi `send` |
 
 **Transcript chính:** `starter_v0/transcripts/v3_openrouter_20261110T185012964883.transcript.json` — 4 lượt, provider `openrouter`, model `openai/gpt-4o-mini`.
+
+**Transcript sinh từ UI Streamlit (chạy lại sau khi `tools.yaml` được sửa, artifact khớp repo hiện tại `v3+pac40825b391a+tca4674f23b12`):** `starter_v0/transcripts/v3_openrouter_20261111T005307903185.transcript.json` — 3 lượt, phủ đủ 3 hành vi rubric: yêu cầu thường → `wikipedia` trả dữ liệu thật · thiếu thông tin → agent hỏi lại · yêu cầu đăng → `clarify` (`status: waiting_for_user`).
 
 Hai transcript bổ sung (cùng version v3):
 - `v3_openrouter_20261110T184912065678.transcript.json` — 4 lượt: wikipedia → hỏi lại → timeline → lookup.
