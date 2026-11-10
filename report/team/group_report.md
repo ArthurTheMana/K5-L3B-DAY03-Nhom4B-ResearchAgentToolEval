@@ -156,3 +156,8 @@ Chi tiết đóng góp của từng thành viên nằm trong [TEAM.md](../../TEA
 ## 8. Tài liệu tham khảo
 - Bài giảng môn Prompt Engineering (Day 03).
 - Tài liệu API của OpenRouter, Wikipedia.
+- **OpenUI** — https://github.com/thesysdev/openui (MIT). Dùng `@openuidev/react-ui` để sinh component library và OpenUI Lang prompt cho UI, `@openuidev/browser-bundle` để render UI trên trình duyệt không cần bước build.
+- **FastAPI** — https://fastapi.tiangolo.com · **Uvicorn** — https://www.uvicorn.org · **Streamlit** — https://streamlit.io (UI của nhóm).
+- **Wikipedia REST API** — https://en.wikipedia.org/w/rest.php/v1/search/page (nguồn dữ liệu cho tool `wikipedia` của nhóm).
+- **Cloudflare Tunnel** — https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/downloads/ (đưa UI local ra link public cho team khác thử).
+- Tài liệu của lab: [README.md](../../README.md) · [RUBRIC.md](../../RUBRIC.md) · [CHECKPOINTS.md](../../CHECKPOINTS.md) · [docs/TOOL-SETUP.md](../../docs/TOOL-SETUP.md)

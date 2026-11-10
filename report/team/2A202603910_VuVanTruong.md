@@ -14,7 +14,7 @@ Tôi phụ trách ba việc chính trong nhóm:
 
 1. **Viết bộ eval của nhóm** (`starter_v0/data/eval_group.json`) — 10 case: 5 single turn và 5 multi turn, trong đó có 3 case kiểm tra việc agent route tới tool `wikipedia` mà một bạn khác trong nhóm viết.
 2. **Xây UI cho agent** (`starter_v0/ui_server.py` + `starter_v0/ui/`) — FastAPI phía Python, frontend là một trang HTML tĩnh render component OpenUI, không cần build step.
-3. **Chạy live chat và làm báo cáo** (`starter_v0/transcripts/`, `report/team/`) — 3 transcript để chứng minh agent thật sự hỏi lại và xin xác nhận trước khi hành động; Phần A của báo cáo nhóm, poster, và hỗ trợ điền Phần B.
+3. **Chạy live chat và làm báo cáo** (`starter_v0/transcripts/`, `report/team/`) — 3 transcript để chứng minh agent thật sự hỏi lại và xin xác nhận trước khi hành động; Phần A của báo cáo nhóm và poster. Ở Phần B, tôi phụ trách **B3 (10 case eval của nhóm)** và **B4 (bằng chứng live chat)**; các mục B1/B2/B5a và mục 3, 5, 6, 7, 8 do nhóm trưởng và các bạn khác viết.
 
 ## 3. Đóng góp cụ thể
 
@@ -91,7 +91,13 @@ Riêng bảng B2 tôi ghi lại **cả các hồi quy** chứ không chỉ đư�
 | Transcript live chat | `starter_v0/transcripts/v3_openrouter_20261110T185012964883.transcript.json` (+ 2 file nữa) |
 | Báo cáo nhóm + poster | `report/team/group_report.md`, `report/team/poster.html` |
 
-Commit của tôi: `8d63909` (sửa G8), `d917ebe` (Phần B báo cáo), `4e3ed92` (chạy group eval + transcript), `d4f844a` (sửa UI), `83e16aa` (merge UI + eval), `cfeff3a` (TEAM.md + báo cáo cá nhân).
+Commit của tôi:
+- `83e16aa` — merge UI + bộ eval của nhóm
+- `8d63909` — sửa case G08 (chốt `lang="vi"` để args xác định)
+- `4e3ed92` — chạy suite group (10/10 PASS) + 3 transcript live chat
+- `d4f844a` — sửa UI (bọc `SectionItem` vào `SectionBlock`, sửa theme)
+- `bd960e8` — tạo báo cáo cá nhân này
+- `5291fab` — điền B3/B4 vào báo cáo nhóm, gỡ phần gán công việc của các bạn khác
 
 ### 4.2 Số liệu đo được
 
@@ -112,6 +118,14 @@ Theo [RULES.md](../../RULES.md), tôi ghi lại công cụ AI đã dùng và cá
 | Trợ lý AI (DeepSeek Harness) | Đọc code starter, thiết kế kiến trúc 2 pha cho UI, viết `ui_server.py` / `index.html` / `app.css`, viết 10 eval case, viết unit test, sinh và chỉnh OpenUI prompt, viết Phần A/B của báo cáo | **Tôi không tin lời AI** — mọi claim đều kiểm chứng bằng lệnh thật: `pytest` (90 passed), `scripts/test_ui_server.py` (6/6), `scripts/smoke_ui.py` (PASS), `run_eval.py --suite group` (10/10, `provider_error_cases=0`), và render UI bằng trình duyệt headless để **chụp ảnh xác nhận bằng mắt**. Riêng báo cáo thì tôi đối chiếu **từng số liệu** với `runs/*.json` bằng script, phát hiện và sửa 2 chỗ bị viết sai |
 | OpenAI GPT-4o-mini (qua OpenRouter) | Model sinh câu trả lời và chương trình OpenUI Lang | Chạy trên bộ eval cố định 20 case và bộ nhóm 10 case; mọi metric đọc từ trường `summary` trong run JSON |
 | Wikipedia REST API | Nguồn dữ liệu cho tool `wikipedia` | Gọi thật từ máy, kiểm tra item trả về, URL và header `User-Agent` |
+
+**Ghi nguồn thư viện bên ngoài** (theo [RULES.md](../../RULES.md), *"Ghi nguồn khi dùng code, dữ liệu hoặc tài liệu từ bên ngoài"*):
+
+| Thư viện | Phiên bản | License | Nguồn | Dùng để |
+|---|---|---|---|---|
+| OpenUI (`@openuidev/react-ui`, `@openuidev/react-lang`, `@openuidev/browser-bundle`) | 0.18.5 / 1.1.0 / 0.2.2 | MIT | https://github.com/thesysdev/openui | Component library + OpenUI Lang prompt cho UI |
+| FastAPI · Uvicorn | ≥0.110.0 · ≥0.27.0 | MIT | https://fastapi.tiangolo.com · https://www.uvicorn.org | Backend UI, stream SSE |
+| `htm` | 3.1.1 | Apache-2.0 | https://github.com/developit/htm | Viết React không cần bước build |
 
 Nguyên tắc tôi đặt ra và giữ suốt bài: **mọi dòng trong báo cáo phải truy được về một file hoặc commit cụ thể; không ghi metric, transcript hay commit mà tôi không tự chạy ra.** Trước khi commit tôi cũng đã quét `runs/` và `transcripts/` để chắc chắn không rò rỉ API key.
 
