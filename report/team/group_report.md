@@ -169,22 +169,27 @@ Liệt kê đúng 10 case trong `starter_v0/data/eval_group.json` (5 single turn
 
 | Case ID | What It Tests | Expected Tool/Behavior | Result |
 |---|---|---|---|
-| G01_wikipedia_background_fact | Kiến thức nền (tổng quan khái niệm) → `wikipedia`, không dùng `lookup`/`papers` | `wikipedia` | chờ chạy `--suite group` |
-| G02_wikipedia_vs_lookup_news | Sự kiện có thời điểm → `lookup(topic=news, timeframe=day)`, **không** dùng `wikipedia` | `lookup` | chờ chạy `--suite group` |
-| G03_missing_wikipedia_topic | Thiếu đối tượng tra cứu → phải `clarify`, không tự đoán | `clarify(response_type=text)` | chờ chạy `--suite group` |
-| G04_greeting_no_tool | Lời cảm ơn → trả lời thẳng, không gọi tool nào (kể cả `send`) | `no_tool` | chờ chạy `--suite group` |
-| G05_out_of_scope_creative_writing | Yêu cầu sáng tác văn học ngoài phạm vi research | `no_tool` (refuse) | chờ chạy `--suite group` |
-| G06_switch_wikipedia_to_web_news | 3 lượt: đổi nguồn wikipedia→web, khóa `timeframe=day`, `topic=news` | `lookup` | chờ chạy `--suite group` |
-| G07_missing_url_then_fetch | 3 lượt: thiếu URL → lượt 2 cấp URL → chỉ đọc link đó | `fetch(url=…)` | chờ chạy `--suite group` |
-| G08_wikipedia_carryover_query | 3 lượt: giữ tool wikipedia, đổi query, yêu cầu bản tiếng Việt | `wikipedia(query="học máy", lang="vi")` | chờ chạy `--suite group` |
-| G09_confirmed_send_boundary | 3 lượt: user đã xác nhận rõ → agent phải hành động `confirmed=true`, không hỏi lại | `send(confirmed=true)` | chờ chạy `--suite group` |
-| G10_wikipedia_plus_news_parallel | 3 lượt: cần cả kiến thức nền lẫn tin mới → gọi **cả hai** tool | `wikipedia` + `lookup(topic=news)` | chờ chạy `--suite group` |
+| G01_wikipedia_background_fact | Kiến thức nền (tổng quan khái niệm) → `wikipedia`, không dùng `lookup`/`papers` | `wikipedia` | **PASS** — gọi `wikipedia` |
+| G02_wikipedia_vs_lookup_news | Sự kiện có thời điểm → `lookup(topic=news, timeframe=day)`, **không** dùng `wikipedia` | `lookup` | **PASS** — gọi `lookup(topic=news, timeframe=day)` |
+| G03_missing_wikipedia_topic | Thiếu đối tượng tra cứu → phải `clarify`, không tự đoán | `clarify(response_type=text)` | **PASS** — gọi `clarify`, không tự chọn chủ đề |
+| G04_greeting_no_tool | Lời cảm ơn → trả lời thẳng, không gọi tool nào (kể cả `send`) | `no_tool` | **PASS** — không gọi tool nào |
+| G05_out_of_scope_creative_writing | Yêu cầu sáng tác văn học ngoài phạm vi research | `no_tool` (refuse) | **PASS** — không gọi tool nào |
+| G06_switch_wikipedia_to_web_news | 3 lượt: đổi nguồn wikipedia→web, khóa `timeframe=day`, `topic=news` | `lookup` | **PASS** — gọi `lookup(topic=news, timeframe=day)` |
+| G07_missing_url_then_fetch | 3 lượt: thiếu URL → lượt 2 cấp URL → chỉ đọc link đó | `fetch(url=…)` | **PASS** — gọi `fetch(url=…)` đúng link |
+| G08_wikipedia_carryover_query | 3 lượt: giữ tool wikipedia, đổi query, yêu cầu bản tiếng Việt | `wikipedia(query="học máy", lang="vi")` | **PASS** — gọi `wikipedia(query="học máy", lang="vi")` |
+| G09_confirmed_send_boundary | 3 lượt: user đã xác nhận rõ → agent phải hành động `confirmed=true`, không hỏi lại | `send(confirmed=true)` | **PASS** — gọi `send(confirmed=true)` |
+| G10_wikipedia_plus_news_parallel | 3 lượt: cần cả kiến thức nền lẫn tin mới → gọi **cả hai** tool | `wikipedia` + `lookup(topic=news)` | **PASS** — gọi cả `wikipedia` **và** `lookup(topic=news)` |
+
+**Kết quả run:** `case_accuracy = 1.00` (10/10 PASS), `tool_routing_accuracy = 1.00`, `argument_accuracy = 1.00`, `multiturn_accuracy = 1.00`, `provider_error_cases = 0`, `measured_cases = 10/10` — run hợp lệ theo quy tắc chấm.
+
+- Run file: `starter_v0/runs/v3_B_group_openrouter_20261110T184843874713.json`
+- Provider/model: `openrouter` / `openai/gpt-4o-mini` (cùng model với v0–v3)
+- Artifact version: `v3+p8b1d8369242a+tff4501744c70` (khớp dòng v3 trong `version_log.csv`)
 
 Bộ 10 case nhóm phủ đủ 6 loại lỗi của `allowed_failure_types` (`wrong_tool`, `wrong_arg_value`, `wrong_boundary`, `unnecessary_tool`, `out_of_scope`, `missing_info`) và có **3 case route tới tool mới `wikipedia`** (G01, G08, G10) — thoả yêu cầu của rubric C5.
 
-> ⚠️ Cột *Result* được điền sau khi chạy:
+> Lệnh tái lập:
 > `python run_eval.py --provider openrouter --version v3 --suite group --eval-cases data/eval_group.json`
-> (run phải có `provider_error_cases == 0` và `measured_cases == total_cases` để dùng làm bằng chứng).
 
 ### B4. Live Chat Evidence
 
@@ -192,12 +197,20 @@ Lấy từ `starter_v0/transcripts/*.transcript.json`.
 
 | Turn | User Request | Tool Calls | Version Evidence | Outcome |
 |---|---|---|---|---|
-|  |  |  |  |  |
+| 1 | *"Cho mình tổng quan trên Wikipedia về blockchain"* | `wikipedia(query="Blockchain", lang="en")` | `artifact_version = v3+p8b1d8369242a+tff4501744c70` (khớp dòng v3 trong `version_log.csv`) | **PASS** — trả 3 mục từ Wikipedia kèm link thật (`Blockchain`, `Cryptocurrency`, `Fork (blockchain)`) |
+| 2 | *"Tóm tắt 5 tweet mới nhất giúp mình"* | *(không gọi tool)* | như trên | **PASS** — thiếu handle nên agent **hỏi lại**: *"Bạn vui lòng cung cấp tên tài khoản Twitter…"*, không đoán bừa |
+| 3 | *"Của Elon Musk nhé"* | `timeline(screenname="elonmusk", limit=5)` | như trên | **PASS** — dùng đúng handle, giữ `limit=5` từ lượt 2; tool lỗi vì thiếu `RAPIDAPI_KEY` và agent **báo lỗi thật, không bịa kết quả** |
+| 4 | *"Đăng bản tin đó lên Telegram cho tôi"* | `clarify(response_type="yes_no")` | như trên | **PASS** — agent **hỏi xác nhận trước khi gửi**: *"Bạn có thể xác nhận nội dung bản tin…?"*, chưa gọi `send` |
 
-> Chạy bằng `python chat.py --provider openrouter --version v3`, tối thiểu 3 lượt:
-> (1) yêu cầu research thường, (2) yêu cầu thiếu thông tin rồi bổ sung ở lượt sau,
-> (3) yêu cầu gửi/đăng bản tin lên Telegram. File transcript sinh ra tự động trong
-> `starter_v0/transcripts/` và đã commit vào repo.
+**Transcript chính:** `starter_v0/transcripts/v3_openrouter_20261110T185012964883.transcript.json` — 4 lượt, provider `openrouter`, model `openai/gpt-4o-mini`.
+
+Hai transcript bổ sung (cùng version v3):
+- `v3_openrouter_20261110T184912065678.transcript.json` — 4 lượt: wikipedia → hỏi lại → timeline → lookup (gộp tin tức trước khi đăng).
+- `v3_openrouter_20261110T184936514496.transcript.json` — 1 lượt: yêu cầu đăng Telegram → `clarify(response_type="yes_no")`.
+
+Cả 3 transcript đều được sinh bằng `python chat.py --provider openrouter --version v3` và **đã commit vào repo** (`starter_v0/transcripts/`).
+
+> ⚠️ Một hạn chế quan sát được: ở lượt 2 agent hỏi lại bằng **text**, không gọi tool `clarify`, vì `chat.py` không ép `tool_choice`. Trong eval thì ngược lại — `run_eval.py` ép `tool_choice="required"` cho các case cần gọi tool, nên `clarify` luôn được gọi. Đây là khác biệt giữa *hành vi thật khi chat* và *hành vi được chấm tự động*, và cũng là lý do eval không thể đo được lỗi "hỏi lại nhưng không dùng tool".
 
 ### B5a. Required Evidence — Tool mới, unit test, UI
 
@@ -284,6 +297,14 @@ OpenUI dùng `@media (prefers-color-scheme: dark)` để đảo theme. Trên má
 Ban đầu ổ `D:` chỉ còn vài MB trống, `pip install` thất bại với *"No space left on device"*.
 → Xử lý: đặt virtualenv ở ổ `C:` (`C:\Users\tiniv\.venvs\research-agent`) thay vì trong repo; dọn thư mục `pip-*` tạm còn sót. Repo chỉ chứa mã nguồn, không chứa `.venv`.
 
+**9. Live chat hỏi lại bằng text, không dùng tool `clarify` (phát hiện khi đọc transcript).**
+Trong transcript `v3_openrouter_20261110T185012964883.transcript.json`, ở lượt 2 (*"Tóm tắt 5 tweet mới nhất"*) agent **không gọi `clarify`** mà trả lời bằng text thuần: *"Bạn vui lòng cung cấp tên tài khoản Twitter…"*. Hành vi đúng về mặt nghiệp vụ (hỏi thay vì đoán) nhưng **không đi qua tool**, nên không tạo được `awaiting_user` flag mà `chat.py` dùng để dừng vòng lặp.
+→ Nguyên nhân: `chat.py` không ép `tool_choice`, còn `run_eval.py` ép `tool_choice="required"` cho các case cần gọi tool. Đây là **khác biệt giữa hành vi thật khi chat và hành vi được chấm tự động** — ghi lại trung thực thay vì giấu. Nhóm ghi vào B4 và B6 để người chấm hiểu giới hạn của cách chấm.
+
+**10. Thiếu API key cho tool `timeline` / `lookup` trong lúc chạy live chat.**
+`TAVILY_API_KEY`, `FIRECRAWL_API_KEY`, `RAPIDAPI_KEY` đang rỗng trong `.env`, nên `timeline` và `lookup` trả error dict.
+→ Xử lý: agent **báo lỗi thật và không bịa kết quả** — đây đúng là hành vi rubric C6 đòi ("UI che lỗi tool thì không tính"). Transcript vẫn dùng được làm bằng chứng vì phần cần chứng minh là *routing + hỏi lại + xác nhận*, không phải nội dung tool. Khi demo, điền đủ key sẽ có kết quả thật.
+
 ## 6. Tổng hợp đóng góp
 
 Chi tiết đóng góp của từng thành viên nằm trong [TEAM.md](../../TEAM.md) và các báo cáo cá nhân `report/team/MSSV_HoTen.md`.
@@ -312,6 +333,18 @@ Bài học: **cùng một file, hai loại fix khác nhau** — một loại là
 - `R08`/`R14` ở v0: agent gửi **đúng câu trả lời** qua `send` — người đọc phải hiểu đây là lỗi *hành vi*, không phải lỗi *nội dung*.
 - Các case `no_tool` (R08/R09/R14 và G04/G05): eval chỉ kiểm "không gọi tool", **không** kiểm câu trả lời có hữu ích hay không. Một agent trả lời sai mà không gọi tool vẫn PASS.
 - Với `wikipedia`: eval chỉ chấm routing + args, **không** chấm nội dung bài viết có đúng với câu hỏi hay không — đó là lý do unit test cho tool vẫn cần thiết.
+- **Khác biệt eval ↔ live chat**: eval ép `tool_choice="required"` cho case cần gọi tool, còn `chat.py` thì không. Vì vậy trong live chat agent có thể hỏi lại bằng text thay vì gọi `clarify` (xem transcript lượt 2) — hành vi này **không bị eval nào phát hiện**. Người đọc transcript phải tự đối chiếu, không nên tin rằng eval đã phủ hết.
+
+**So sánh eval ↔ live chat (điểm nhóm muốn nói rõ):**
+
+| | Eval (`run_eval.py`) | Live chat (`chat.py`) |
+|---|---|---|
+| `tool_choice` | ép `"required"` khi case cần gọi tool | không ép |
+| Thiếu thông tin | luôn gọi `clarify` | có thể hỏi bằng text |
+| Đo lỗi "hỏi sai kiểu" | có (so `response_type`) | không, phải đọc tay |
+| Kết quả | 20/20 base (v3: 19/20) + 10/10 group | 4 lượt, đủ 3 hành vi C6 yêu cầu |
+
+Nhóm ghi bảng này để **không biến điểm eval thành thứ mà nó không phải**: eval đo routing và args, còn live chat cho thấy agent thật sự hỏi lại và xin xác nhận trước khi hành động.
 
 **Nếu có thêm một vòng, nhóm sẽ thử giả thuyết nào?**
 Vòng v4 sẽ nhắm đúng lỗi còn lại (`R12`): thêm vào `description` của `clarify` một quy tắc phân biệt rõ hai tình huống — *"dùng `response_type='yes_no'` khi cần xin xác nhận một hành động (gửi/đăng/xóa), dùng `response_type='text'` khi cần người dùng cung cấp thêm dữ liệu còn thiếu"* — kèm 2 ví dụ cụ thể. Giả thuyết: phần còn lại là **mơ hồ ranh giới giữa "xin xác nhận" và "xin thêm thông tin"**, nên mẫu ngữ cụ thể sẽ giúp model phân biệt tốt hơn câu quy tắc chung. Metric kỳ vọng: `argument_accuracy` 0.95 → 1.00, `case_accuracy` 0.95 → 1.00.
