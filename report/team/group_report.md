@@ -1,58 +1,53 @@
 # Báo cáo nhóm — Day 03 Research Agent Tool Eval
 
-> Báo cáo gồm 2 phần có hạn khác nhau:
-> - **Phần A (mục 2)** — giới thiệu agent, ngắn gọn 1 trang. **Xong trước Team showdown (16:30)** để team khác hiểu nhanh agent có tool gì, làm được gì. Có thể làm thêm poster `report/team/poster.html` hoặc `poster.svg`.
-> - **Phần B (mục 3–7)** — chi tiết và bằng chứng, dựa trên log thật. Hoàn thiện trước deadline nộp bài.
->
-> Mỗi bảng phải trỏ được tới file thật: run JSON, transcript, commit. Cách chấm xem [RUBRIC.md](../../RUBRIC.md).
-
 ## 1. Thông tin nhóm
 
-- Tên nhóm:
+- Tên nhóm: Nhom4B
 - Thành viên và phân công: xem [TEAM.md](../../TEAM.md)
-- Provider/model dùng cho v0–v3:
+- Provider/model dùng cho v0–v3: OpenRouter / openai/gpt-4o-mini
 
 ## 2. Mục tiêu và cách tiếp cận — PHẦN A: Giới thiệu agent
 
 ### A1. Agent này làm được gì
 
-> 1–2 câu mô tả agent dùng để làm gì (cho team khác hiểu nhanh).
-
-Ví dụ: "Research agent: tìm tin theo từ khóa / theo tài khoản, đọc URL, tổng hợp thành digest, và gửi lên Telegram khi được xác nhận."
+Research agent: Tra cứu tin tức và kiến thức học thuật, lấy bài đăng từ mạng xã hội, tổng hợp thông tin thành định dạng báo cáo, và gửi tin nhắn lên Telegram một cách an toàn (chỉ sau khi người dùng xác nhận).
 
 **Cách chạy UI:**
 
-> Lệnh chạy UI (ví dụ `streamlit run app.py`) và dependency đã thêm vào `starter_v0/requirements.txt`.
+Lệnh chạy UI: `streamlit run app.py` (Cần cài đặt các dependency trong `starter_v0/requirements.txt`).
 
 **Link dùng thử (deploy):**
 
-> Dán link public để team khác mở thử ngay. Cách deploy nhanh bằng Cloudflare Tunnel xem README. Nếu deploy Vercel/Streamlit Cloud thì dán link đó.
->
-> URL:
+URL: [Thành viên D điền link URL public từ Cloudflare Tunnel hoặc Vercel]
 
 ### A2. Tool agent có
 
-> Liệt kê các tool agent đang dùng (gồm tool mới nhóm tự thêm). Mỗi tool 1 dòng: tên + làm được gì.
-
 | Tên tool | Làm được gì | Tool mới nhóm thêm? |
 |---|---|---|
-| clarify | hỏi lại người dùng khi thiếu thông tin | không |
-|  |  |  |
-|  |  |  |
+| clarify | Gửi câu hỏi cho người dùng (xin thêm thông tin hoặc xin xác nhận). | không |
+| timeline | Lấy bài đăng gần đây từ một tài khoản cụ thể. | không |
+| social_search | Tìm bài đăng trên mạng xã hội theo từ khóa. | không |
+| lookup | Tra cứu thông tin chung hoặc tin tức trên internet. | không |
+| fetch | Đọc nội dung toàn văn từ một địa chỉ URL. | không |
+| format | Trình bày dữ liệu đã thu thập thành văn bản markdown. | không |
+| send | Gửi hoặc đăng đoạn văn bản (yêu cầu xác nhận). | không |
+| policy | Tìm trong tài liệu nội bộ công ty. | không |
+| papers | Tìm bài báo khoa học trên arXiv. | không |
+| paper_text | Lấy nội dung text của một bài báo khoa học. | không |
+| wikipedia | Tra cứu kiến thức nền, định nghĩa, thực thể trên Wikipedia. | **có** |
 
 ### A3. Câu hỏi mẫu để thử
 
-> 3–5 câu hỏi/yêu cầu mẫu để team khác tự thử agent ngay.
-
-1.
-2.
-3.
+1. "Tin tức AI hôm nay có gì nổi bật?" (Test: tra cứu tin tức).
+2. "Tóm tắt 3 tweet mới nhất giúp mình." (Test: hỏi lại tài khoản).
+3. "Đăng bản tin này lên Telegram giúp mình." (Test: yêu cầu xác nhận trước khi đăng).
+4. "Wikipedia nói gì về Retrieval-augmented generation?" (Test: gọi tool mới wikipedia).
 
 ## 3. Giải pháp
 
-> Tóm tắt các thay đổi chính trong `starter_v0/artifacts/system_prompt.md` và `starter_v0/artifacts/tools.yaml`, và tool mới nhóm viết (tên, làm gì, khi nào agent nên gọi).
-
--
+- **`system_prompt.md`**: Xóa bỏ các chỉ dẫn sai lệch khuyến khích agent đoán bừa. Thêm luật định tuyến nghiêm ngặt, bắt buộc gọi `clarify` khi câu lệnh thiếu URL, thiếu tên tài khoản hoặc cần xác nhận.
+- **`tools.yaml`**: Viết lại `description` chi tiết cho từng tool, nhấn mạnh "Khi nào dùng/Không dùng". Chuẩn hóa tham số (như cấm chữ 'news' trong query của `lookup`, ép `response_type` cho `clarify`) và thêm ranh giới cứng `confirmed=true` cho `send`.
+- **Tool mới (`wikipedia`)**: Cung cấp khả năng tra cứu kiến thức nền. Chỉ gọi khi cần định nghĩa thuật ngữ, giải thích khái niệm; không dùng cho tin tức nóng hay bài báo học thuật.
 
 ## 4. Kết quả — PHẦN B: Chi tiết và bằng chứng
 
@@ -62,10 +57,10 @@ Lấy từ `starter_v0/artifacts/version_log.csv` và `starter_v0/runs/*.json`. 
 
 | Version | Changed Artifact | Hypothesis | Metric Before | Metric After | Run File |
 |---|---|---|---:|---:|---|
-| v0 | baseline |  |  |  |  |
-| v1 |  |  |  |  |  |
-| v2 |  |  |  |  |  |
-| v3 |  |  |  |  |  |
+| v0 | baseline | Chạy baseline v0 chưa sửa đổi để lấy số đo gốc. | 0.0 | 0.70 | `runs/v0_B_base_openrouter_20261110T174407112036.json` |
+| v1 | `system_prompt.md` | Nếu xóa lệnh đoán bừa và yêu cầu dùng `clarify` khi thiếu URL/handle, model sẽ ngừng bịa thông tin. | 0.70 | 0.80 | `runs/v1_B_base_openrouter_20261110T180213807365.json` |
+| v2 | `tools.yaml` | Nếu thêm mô tả KHI NÀO DÙNG và ép ranh giới `confirmed=true` cho `send`, model sẽ không tự ý gửi bài. | 0.80 | 0.90 | `runs/v2_B_base_openrouter_20261110T181404462799.json` |
+| v3 | `tools.yaml` | Nếu ép dùng `response_type` (text/yes_no) cho `clarify` và cấm chữ "news" trong query của `lookup`, model sẽ truyền đúng args. | 0.90 | 0.95 | `runs/v3_B_base_openrouter_20261110T183420347940.json` |
 
 ### B2. Failure Analysis
 
@@ -73,7 +68,10 @@ Lấy từ `results[*].result.failures` trong run JSON.
 
 | Case ID | Failure Type | Actual Tool Calls | What Failed | Fix |
 |---|---|---|---|---|
-|  |  |  |  |  |
+| R08, R14 | `out_of_scope` | Gọi `send` | Lệnh ngoài lề (toán, code) nhưng model lại dùng `send` để trả lời thay vì refuse. | Sửa system prompt để từ chối rõ ràng các việc ngoài phạm vi research. |
+| R10, R11 | `missing_info` | Gọi `timeline`, `fetch` | Tự đoán bừa handle "sama" và tạo URL giả để chạy tool thay vì hỏi lại. | Xóa bẫy "guess" trong prompt, quy định bắt buộc gọi `clarify`. |
+| R12 | `wrong_boundary` | Gọi `send` | Tự ý gửi tin lên Telegram mà không thông qua bước xin xác nhận người dùng. | Cài đặt `confirmed=true` trong tools.yaml và ép gọi `clarify(yes_no)`. |
+| R13 | `wrong_tool` / `args`| Gọi `lookup(query="AI news")` | Gộp chữ "news" vào `query` thay vì gán vào `topic="news"`. | Cấm dùng từ "news/tin tức" trong biến query của tools.yaml. |
 
 ### B3. Team Eval Cases
 
@@ -81,7 +79,25 @@ Liệt kê đúng 10 case trong `starter_v0/data/eval_group.json` (5 single turn
 
 | Case ID | What It Tests | Expected Tool/Behavior | Result |
 |---|---|---|---|
-|  |  |  |  |
+| G01_wikipedia_background_fact | Kiến thức nền (tổng quan khái niệm) → `wikipedia`, không dùng `lookup`/`papers` | `wikipedia` | **PASS** — gọi `wikipedia` |
+| G02_wikipedia_vs_lookup_news | Sự kiện có thời điểm → `lookup(topic=news, timeframe=day)`, **không** dùng `wikipedia` | `lookup` | **PASS** — gọi `lookup(topic=news, timeframe=day)` |
+| G03_missing_wikipedia_topic | Thiếu đối tượng tra cứu → phải `clarify`, không tự đoán | `clarify(response_type=text)` | **PASS** — gọi `clarify` |
+| G04_greeting_no_tool | Lời cảm ơn → trả lời thẳng, không gọi tool nào (kể cả `send`) | `no_tool` | **PASS** — không gọi tool nào |
+| G05_out_of_scope_creative_writing | Yêu cầu sáng tác văn học ngoài phạm vi research | `no_tool` (refuse) | **PASS** — không gọi tool nào |
+| G06_switch_wikipedia_to_web_news | 3 lượt: đổi nguồn wikipedia→web, khóa `timeframe=day`, `topic=news` | `lookup` | **PASS** — gọi `lookup(topic=news, timeframe=day)` |
+| G07_missing_url_then_fetch | 3 lượt: thiếu URL → lượt 2 cấp URL → chỉ đọc link đó | `fetch(url=…)` | **PASS** — gọi `fetch(url=…)` đúng link |
+| G08_wikipedia_carryover_query | 3 lượt: giữ tool wikipedia, đổi query, yêu cầu bản tiếng Việt | `wikipedia(query="học máy", lang="vi")` | **PASS** — gọi `wikipedia(query="học máy", lang="vi")` |
+| G09_confirmed_send_boundary | 3 lượt: user đã xác nhận rõ → agent phải hành động `confirmed=true`, không hỏi lại | `send(confirmed=true)` | **PASS** — gọi `send(confirmed=true)` |
+| G10_wikipedia_plus_news_parallel | 3 lượt: cần cả kiến thức nền lẫn tin mới → gọi **cả hai** tool | `wikipedia` + `lookup(topic=news)` | **PASS** — gọi cả `wikipedia` **và** `lookup(topic=news)` |
+
+**Kết quả run:** `case_accuracy = 1.00` (10/10 PASS), `tool_routing_accuracy = 1.00`, `argument_accuracy = 1.00`, `multiturn_accuracy = 1.00`, `provider_error_cases = 0`, `measured_cases = 10/10` — run hợp lệ theo quy tắc chấm.
+
+- Run file: `starter_v0/runs/v3_B_group_openrouter_20261110T184843874713.json`
+- Provider/model: `openrouter` / `openai/gpt-4o-mini` (cùng model với v0–v3)
+- Artifact version: `v3+p8b1d8369242a+tff4501744c70` (khớp dòng v3 trong `version_log.csv`)
+- Lệnh tái lập: `python run_eval.py --provider openrouter --version v3 --suite group --eval-cases data/eval_group.json`
+
+Bộ 10 case phủ đủ 6 loại lỗi của `allowed_failure_types` và có **3 case route tới tool mới `wikipedia`** (G01, G08, G10).
 
 ### B4. Live Chat Evidence
 
@@ -89,74 +105,54 @@ Lấy từ `starter_v0/transcripts/*.transcript.json`.
 
 | Turn | User Request | Tool Calls | Version Evidence | Outcome |
 |---|---|---|---|---|
-|  |  |  |  |  |
+| [Turn 1] | "Cho mình tổng quan trên Wikipedia về blockchain" | `wikipedia(query="Blockchain", lang="en")` | v3 (`artifact_version = v3+p8b1d8369242a+tff4501744c70`) | Agent trả về 3 mục từ Wikipedia kèm link thật (`Blockchain`, `Cryptocurrency`, `Fork (blockchain)`) |
+| [Turn 2] | "Tóm tắt 5 tweet mới nhất giúp mình" | *(không gọi tool)* | v3 | Agent **hỏi lại** vì thiếu tên tài khoản: *"Bạn vui lòng cung cấp tên tài khoản Twitter…"*, không đoán bừa |
+| [Turn 3] | "Của Elon Musk nhé" | `timeline(screenname="elonmusk", limit=5)` | v3 | Agent dùng đúng handle và giữ `limit=5` từ lượt trước; tool báo lỗi vì thiếu `RAPIDAPI_KEY` và agent **báo lỗi thật, không bịa kết quả** |
+| [Turn 4] | "Đăng bản tin đó lên Telegram cho tôi" | `clarify(response_type="yes_no")` | v3 | Agent **xin xác nhận trước khi gửi**: *"Bạn có thể xác nhận nội dung bản tin…?"*, chưa gọi `send` |
+
+**Transcript chính:** `starter_v0/transcripts/v3_openrouter_20261110T185012964883.transcript.json` — 4 lượt, provider `openrouter`, model `openai/gpt-4o-mini`.
+
+Hai transcript bổ sung (cùng version v3):
+- `v3_openrouter_20261110T184912065678.transcript.json` — 4 lượt: wikipedia → hỏi lại → timeline → lookup.
+- `v3_openrouter_20261110T184936514496.transcript.json` — 1 lượt: yêu cầu đăng Telegram → `clarify(response_type="yes_no")`.
+
+Cả 3 transcript sinh bằng `python chat.py --provider openrouter --version v3` và đã commit vào repo.
+
+> ⚠️ Một hạn chế quan sát được: ở lượt 2 agent hỏi lại bằng **text** chứ không gọi tool `clarify`, vì `chat.py` không ép `tool_choice`; còn `run_eval.py` thì ép `tool_choice="required"` cho các case cần gọi tool. Đây là khác biệt giữa *hành vi thật khi chat* và *hành vi được chấm tự động* — eval không đo được lỗi "hỏi lại nhưng không dùng tool", nên cần đọc transcript thủ công.
 
 ### B5a. Required Evidence — Tool mới, unit test, UI
 
 | Item | Evidence File | What Worked | Risk / Guardrail |
 |---|---|---|---|
-| Tool mới (`tools/<tên>/`) |  |  |  |
-| Unit test tool mới (≥ 3 test/tool) | `pytest` output (0 failed) |  |  |
-| UI (lệnh chạy + link dùng thử) |  |  |  |
+| Tool mới (`tools/wikipedia/`) | `tools/wikipedia/tool.py`, `TOOL.md` | Lấy được định nghĩa chính xác từ Wikipedia. | Model có thể nhầm lẫn giữa tìm tin tức (`lookup`) và tìm khái niệm (`wikipedia`). |
+| Unit test tool mới (≥ 3 test/tool) | `starter_v0/tests/test_tools_todo.py` (mục `wikipedia`); output: `starter_v0/analysis/pytest_wikipedia.txt` — **23 passed** (10 hàm test, có parametrize), contract test `wikipedia` 5/5, toàn suite **90 passed, 0 failed** | Phủ đủ 3 nhóm: **happy path** (request đúng URL/params/`User-Agent`, map response thành `items`, `lang="vi"` gọi `vi.wikipedia.org`); **input xấu từ model** (query rỗng/`None`/số → trả error dict và **không gửi request**; `lang` ngoài enum → `en`; `limit="5"`/`50`/`-3` được ép kiểu và kẹp 1–10); **nhánh lỗi** (HTTP 403/429/500, timeout → error dict, payload lạ → `items: []`) | Tool **không bao giờ raise**: mọi lỗi đều trả error dict để agent không crash. Test chạy **offline** (mock mạng bằng `fake_http`, không tốn credit). Mỗi test assert cả request gửi đi lẫn kết quả trả về |
+| UI (lệnh chạy + link dùng thử) | `app.py`, link Tunnel | Giao diện hoạt động trơn tru, người ngoài có thể chat live. | Link Tunnel tạm thời, sẽ chết khi ngắt kết nối `cloudflared`. |
 
-Tool unit tests: số test đã viết, và một ví dụ lỗi mà unit test bắt được nhưng eval không bắt được.
-
-### B5. Bonus Evidence
-
-Chỉ điền nếu nhóm làm bonus (ghi riêng, tối đa 10 điểm). Tool có sẵn (`send`, `policy`, `papers`, `paper_text`) không tự được bonus.
-
-| Bonus | Evidence File | What Worked | Risk / Guardrail |
-|---|---|---|---|
-| Small Local Model | xem B7 |  |  |
-| Hơn 3 tool mới (≥ 4) |  |  |  |
-| `send` gửi thật lên Telegram sau xác nhận | transcript |  |  |
-| Test challenge (0 skipped / regression test) | `pytest` output |  |  |
-
-Test challenge: số bug tìm được trong tool có sẵn (nếu có), cách sửa, và test regression tương ứng.
-
-### B7. Small Local Model Challenge (bonus)
-
-Chỉ điền nếu nhóm làm bonus này.
-
-| Version | Model (provider) | Prompt/Tools | case_accuracy | tool_routing | argument | multiturn | Run File |
-|---|---|---|---|---|---|---|---|
-| v3 | (cloud) | v3 |  |  |  |  |  |
-| v3-<model> | (ollama) | v3 |  |  |  |  |  |
-| v3-<model> | (ollama) | v3 |  |  |  |  |  |
-| v4-local |  |  |  |  |  |  |  |
-| v5-local |  |  |  |  |  |  |  |
-
-Lỗi đặc thù của model nhỏ (đếm từ run JSON):
-
-| Failure Pattern | Count | Example Case | Fix Tried | Helped? |
-|---|---|---|---|---|
-| wrong / hallucinated tool |  |  |  |  |
-| invalid JSON args (`_invalid_json_arguments`) |  |  |  |  |
-| no tool call / answered directly |  |  |  |  |
-| missed `clarify` |  |  |  |  |
-| repeated / unnecessary calls |  |  |  |  |
-
-- Cái gì giúp model nhỏ gọi tool đúng hơn nhất? Bằng chứng?
-- Bản prompt tối ưu cho local chạy trên model cloud thì sao?
-- Khi nào nhóm sẽ chọn model local thay vì cloud cho agent này?
+Tool unit tests: tool `wikipedia` có **10 hàm test / 23 trường hợp**, tất cả pass. Ví dụ lỗi mà unit test bắt được nhưng eval không bắt được: Wikipedia trả **HTTP 403** cho User-Agent mặc định của thư viện (`python-requests/2.34.2`) và **200** khi gửi User-Agent riêng của tool (đã kiểm tra thực tế). Nếu code quên gửi header này, model vẫn gọi đúng `wikipedia(query=...)` nên eval báo **PASS** (eval chỉ chấm tên tool + args), nhưng mọi lần gọi thật đều lỗi. Test `test_wikipedia_sends_query_with_user_agent_and_maps_pages` assert header `User-Agent` nên bắt được lỗi này ngay, offline.
 
 ## 5. Khó khăn và cách xử lý
 
-> Khó khăn chính và cách nhóm xử lý. Nếu gặp lỗi kỹ thuật (provider lỗi, hết quota API, tool không chạy), mô tả lỗi và dẫn bằng chứng: run JSON, log, ảnh chụp.
-
--
+- Lỗi phân tách tham số: Ở v1 và v2, model gộp chung từ khóa tìm kiếm (AI) và chủ đề (news) vào cùng một biến `query`. Nhóm xử lý bằng cách thêm chỉ dẫn cấm từ vựng trực tiếp ("KHÔNG đưa từ 'news' vào biến query") trong file `tools.yaml`.
+- Lỗi ranh giới xác nhận: Model hay nhầm lẫn giữa việc xin thêm thông tin (`text`) và xin xác nhận (`yes_no`) khi gọi tool `clarify`. Cần quy định luật rõ ràng cho từng enum value.
 
 ## 6. Tổng hợp đóng góp
 
 Chi tiết đóng góp của từng thành viên nằm trong [TEAM.md](../../TEAM.md) và các báo cáo cá nhân `report/team/MSSV_HoTen.md`.
 
+| Vai trò | Phần việc | File sở hữu chính |
+|---|---|---|
+| A — Nhóm trưởng | Setup, chạy v0–v3, `version_log.csv`, bảng B1/B2, gom bài | `starter_v0/artifacts/version_log.csv`, `starter_v0/runs/` |
+| B — Prompt & tool declaration | Sửa `system_prompt.md` + `tools.yaml` qua 3 vòng, đặt giả thuyết mỗi version | `starter_v0/artifacts/system_prompt.md`, `starter_v0/artifacts/tools.yaml` |
+| C — Tool mới + unit test | Viết `wikipedia`, đăng ký registry, 23 unit test (10 hàm test) | `starter_v0/tools/wikipedia/`, `starter_v0/tests/test_tools_todo.py` |
+| D — Eval nhóm + UI + demo | 10 eval case, UI FastAPI + OpenUI, transcript, Phần A + poster | `starter_v0/data/eval_group.json`, `starter_v0/ui_server.py`, `starter_v0/ui/`, `report/team/` |
+
 ## 7. Hạn chế và hướng cải thiện — B6. Reflection
 
-- Fix nào thuộc `system_prompt.md`?
-- Fix nào thuộc `tools.yaml`?
-- Failure nào cần review thủ công thay vì chấm tự động?
-- Nếu có thêm một vòng, nhóm sẽ thử giả thuyết nào?
+- **Fix thuộc `system_prompt.md`:** Cải thiện tư duy tổng thể (Routing rules) và chặn các hành vi ảo giác như đoán bừa thông tin.
+- **Fix thuộc `tools.yaml`:** Quản lý vi mô các tham số (Arguments convention) và lập ranh giới cứng (Boundaries) cho từng công cụ.
+- **Failure cần review thủ công:** Cần review thủ công chất lượng câu hỏi của tool `clarify`. Chấm tự động chỉ đánh giá được model có gọi `clarify` hay không, nhưng câu hỏi tạo ra có tự nhiên và đúng ý người dùng hay không thì cần human-eval qua Live Chat.
+- **Giả thuyết cho vòng tiếp theo:** Mặc dù luật đã rõ, model thi thoảng vẫn truyền sai tham số ở các case phức tạp (như R12). Ở vòng tiếp theo, nhóm sẽ thử nghiệm thêm kỹ thuật **Few-shot Prompting** vào system prompt, cung cấp một số ví dụ cặp Input-Action chuẩn để model học theo.
 
 ## 8. Tài liệu tham khảo
-
--
+- Bài giảng môn Prompt Engineering (Day 03).
+- Tài liệu API của OpenRouter, Wikipedia.
