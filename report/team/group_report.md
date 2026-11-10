@@ -16,17 +16,20 @@
 
 ### A1. Agent này làm được gì
 
-> 1–2 câu mô tả agent dùng để làm gì (cho team khác hiểu nhanh).
-
-Ví dụ: "Research agent: tìm tin theo từ khóa / theo tài khoản, đọc URL, tổng hợp thành digest, và gửi lên Telegram khi được xác nhận."
+> Research agent: nhận câu hỏi của người dùng, chọn đúng tool, chạy tool thật (tìm web, đọc URL, tra tweet theo tài khoản hoặc từ khóa, tra cứu Wikipedia, tìm paper arXiv), rồi tổng hợp kết quả thành digest có trích dẫn. Khi thiếu thông tin agent hỏi lại thay vì đoán bừa, và khi đăng bản tin lên Telegram luôn hỏi xác nhận trước khi gửi.
 
 **Cách chạy UI:**
 
-> Lệnh chạy UI (ví dụ `streamlit run app.py`) và dependency đã thêm vào `starter_v0/requirements.txt`.
+> ```bash
+> cd starter_v0
+> pip install -r requirements.txt
+> uvicorn ui_server:app --port 8000     # → http://127.0.0.1:8000
+> ```
+> UI là **FastAPI (Python) + OpenUI Lang**: backend chạy research agent thật (tái dùng nguyên code của `starter_v0`), frontend render kết quả bằng component OpenUI (bảng, card, callout, chart). Dependency đã thêm vào `starter_v0/requirements.txt`: `fastapi>=0.110.0`, `uvicorn[standard]>=0.27.0`.
 
 **Link dùng thử (deploy):**
 
-> Dán link public để team khác mở thử ngay. Cách deploy nhanh bằng Cloudflare Tunnel xem README. Nếu deploy Vercel/Streamlit Cloud thì dán link đó.
+> Deploy nhanh bằng Cloudflare Tunnel: chạy UI local (`uvicorn ui_server:app --port 8000`), cài `cloudflared`, rồi `cloudflared tunnel --url http://localhost:8000` → copy URL `https://<random>.trycloudflare.com` dán vào dòng dưới. Link này tạm thời, sống theo phiên `cloudflared` nên phải giữ terminal mở trong suốt buổi demo.
 >
 > URL:
 
@@ -36,17 +39,27 @@ Ví dụ: "Research agent: tìm tin theo từ khóa / theo tài khoản, đọc 
 
 | Tên tool | Làm được gì | Tool mới nhóm thêm? |
 |---|---|---|
-| clarify | hỏi lại người dùng khi thiếu thông tin | không |
-|  |  |  |
-|  |  |  |
+| clarify | hỏi lại người dùng khi thiếu thông tin, dừng chờ trả lời ở lượt sau | không |
+| timeline | lấy các bài đăng gần đây của một tài khoản theo `screenname` | không |
+| social_search | tìm bài đăng theo từ khóa, có `search_type` Latest/Top | không |
+| lookup | tìm trên web, có `topic` general/news và `timeframe` day/week/month/year | không |
+| fetch | đọc nội dung của một URL cụ thể | không |
+| format | trình bày các item đã có thành markdown digest | không |
+| send | gửi text lên Telegram channel, chỉ gửi khi `confirmed=true` | không |
+| policy | tìm trong company policy markdown nội bộ | không |
+| papers | tìm paper trên arXiv | không |
+| paper_text | tải PDF arXiv và trích text cục bộ | không |
+| wikipedia | tra cứu kiến thức nền từ Wikipedia (định nghĩa, lịch sử, tổng quan khái niệm) | **CÓ** |
 
 ### A3. Câu hỏi mẫu để thử
 
 > 3–5 câu hỏi/yêu cầu mẫu để team khác tự thử agent ngay.
 
-1.
-2.
-3.
+1. "Tin AI hôm nay có gì nổi bật?" — agent sẽ tra web với `topic=news`, `timeframe=day`.
+2. "Tóm tắt 5 tweet mới nhất giúp mình" — thiếu handle nên agent **hỏi lại** thay vì đoán bừa; trả lời "Của Elon Musk nhé" để agent gọi `timeline(screenname=elonmusk, limit=5)`.
+3. "Cho mình tổng quan trên Wikipedia về cách hoạt động của blockchain" — agent route tới tool `wikipedia` (kiến thức nền, không phải tin tức).
+4. "Tổng hợp tin hôm nay rồi đăng lên Telegram cho tôi" — agent **hỏi xác nhận** trước khi gửi, không tự ý đăng.
+5. "Giải giúp mình hệ phương trình bậc hai" — ngoài phạm vi research, agent từ chối và không gọi tool nào.
 
 ## 3. Giải pháp
 

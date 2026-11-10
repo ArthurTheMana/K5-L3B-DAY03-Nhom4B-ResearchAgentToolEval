@@ -3,5 +3,119 @@
   "dataset_role": "group",
   "description": "Case do NHÓM tự viết thêm để cover thêm trường hợp. Mỗi case cần: id, phase='B', query HOẶC turns, failure_type (thuộc allowed_failure_types), và expect (tool_calls[...] hoặc no_tool=true). Nên kèm metadata.what_it_tests.",
   "allowed_failure_types": ["wrong_tool", "wrong_arg_value", "wrong_boundary", "unnecessary_tool", "out_of_scope", "missing_info"],
-  "cases": []
+  "cases": [
+    {
+      "id": "G01_wikipedia_background_fact",
+      "phase": "B",
+      "suite": "group",
+      "query": "Cho mình tổng quan trên Wikipedia về cách hoạt động của blockchain.",
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "wikipedia", "args": {}}]},
+      "metadata": {"skill": "routing_wikipedia_background", "difficulty": "medium", "what_it_tests": "Kiến thức nền, bài tổng quan về một khái niệm → route tới tool wikipedia (KHÔNG dùng lookup web search, KHÔNG dùng papers)."}
+    },
+    {
+      "id": "G02_wikipedia_vs_lookup_news",
+      "phase": "B",
+      "suite": "group",
+      "query": "Tin mới nhất trong ngày về cuộc họp AI ở Seoul là gì?",
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "lookup", "args": {"topic": "news", "timeframe": "day"}}]},
+      "metadata": {"skill": "routing_wikipedia_vs_lookup", "difficulty": "medium", "what_it_tests": "Sự kiện CÓ THỜI ĐIỂM → lookup với topic=news, timeframe=day, KHÔNG dùng wikipedia (wikipedia là kiến thức nền tĩnh)."}
+    },
+    {
+      "id": "G03_missing_wikipedia_topic",
+      "phase": "B",
+      "suite": "group",
+      "query": "Tra cứu giúp mình thông tin trên Wikipedia về chỗ đó.",
+      "failure_type": "missing_info",
+      "expect": {"tool_calls": [{"name": "clarify", "args": {"response_type": "text"}}]},
+      "metadata": {"skill": "clarify_missing_wikipedia_query", "difficulty": "medium", "what_it_tests": "Thiếu đối tượng cần tra ('chỗ đó' không rõ) → hỏi lại bằng clarify, KHÔNG tự đoán một chủ đề bất kỳ."}
+    },
+    {
+      "id": "G04_greeting_no_tool",
+      "phase": "B",
+      "suite": "group",
+      "query": "Cảm ơn bạn nhiều nhé!",
+      "failure_type": "unnecessary_tool",
+      "expect": {"no_tool": true, "behavior": "answer_without_tool"},
+      "metadata": {"skill": "no_tool_social", "difficulty": "easy", "what_it_tests": "Lời cảm ơn / chào hỏi → trả lời thẳng, KHÔNG gọi bất kỳ tool nào (kể cả send)."}
+    },
+    {
+      "id": "G05_out_of_scope_creative_writing",
+      "phase": "B",
+      "suite": "group",
+      "query": "Soạn giúp mình một bài thơ ngắn tặng mẹ nhé.",
+      "failure_type": "out_of_scope",
+      "expect": {"no_tool": true, "behavior": "refuse"},
+      "metadata": {"skill": "out_of_scope_creative", "difficulty": "easy", "what_it_tests": "Yêu cầu sáng tác văn học nằm ngoài phạm vi research → KHÔNG gọi tool, từ chối/định hướng lại."}
+    },
+    {
+      "id": "G06_switch_wikipedia_to_web_news",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Cho mình tổng quan về blockchain."},
+        {"role": "user", "content": "Bỏ Wikipedia đi, tìm tin mới nhất về blockchain trên web đi."},
+        {"role": "user", "content": "Tin trong ngày thôi."}
+      ],
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "lookup", "args": {"topic": "news", "timeframe": "day"}}]},
+      "metadata": {"skill": "multiturn_switch_wikipedia_to_web", "difficulty": "hard", "what_it_tests": "3 turns: chỉ xử lý lượt cuối, lượt 2 đổi nguồn wikipedia→web, lượt 3 khóa timeframe=day và topic=news."}
+    },
+    {
+      "id": "G07_missing_url_then_fetch",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Ai là người sáng lập công ty này?"},
+        {"role": "user", "content": "https://en.wikipedia.org/wiki/OpenAI"},
+        {"role": "user", "content": "Chỉ đọc đúng trang đó thôi."}
+      ],
+      "failure_type": "missing_info",
+      "expect": {"tool_calls": [{"name": "fetch", "args": {"url": "https://en.wikipedia.org/wiki/OpenAI"}}]},
+      "metadata": {"skill": "multiturn_url_then_fetch", "difficulty": "medium", "what_it_tests": "3 turns: thiếu URL ở lượt 1, lượt 2 cấp URL, lượt 3 xác nhận chỉ đọc link đó → fetch đúng url."}
+    },
+    {
+      "id": "G08_wikipedia_carryover_query",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Tra Wikipedia giúp mình về trí tuệ nhân tạo."},
+        {"role": "user", "content": "Thay bằng học máy đi."},
+        {"role": "user", "content": "Giữ nguyên nguồn Wikipedia nhé."}
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {"tool_calls": [{"name": "wikipedia", "args": {"query": "học máy"}}]},
+      "metadata": {"skill": "multiturn_wikipedia_carryover", "difficulty": "hard", "what_it_tests": "3 turns: giữ tool wikipedia, đổi query sang 'học máy' theo lượt 2, lượt 3 khẳng định nguồn."}
+    },
+    {
+      "id": "G09_confirmed_send_boundary",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Tạo bản tin về AI agent rồi đăng lên Telegram cho tôi."},
+        {"role": "user", "content": "Nội dung: AI agent 2026 đột phá."},
+        {"role": "user", "content": "Gửi đi."}
+      ],
+      "failure_type": "wrong_boundary",
+      "expect": {"tool_calls": [{"name": "send", "args": {"confirmed": true}}]},
+      "metadata": {"skill": "boundary_confirm_then_send", "difficulty": "hard", "what_it_tests": "3 turns: user đã XÁC NHẬN rõ ràng ở lượt 3 → agent phải hành động với send(confirmed=true), KHÔNG hỏi lại lần nữa và KHÔNG gửi khi chưa xác nhận."}
+    },
+    {
+      "id": "G10_wikipedia_plus_news_parallel",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Tra cứu Wikipedia giúp mình về lịch sử xe điện."},
+        {"role": "user", "content": "Tin mới nhất về xe điện thì sao?"},
+        {"role": "user", "content": "Cho mình cả hai: tổng quan Wikipedia và tin mới nhất."}
+      ],
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [
+        {"name": "wikipedia", "args": {}},
+        {"name": "lookup", "args": {"topic": "news"}}
+      ]},
+      "metadata": {"skill": "parallel_wikipedia_plus_news", "difficulty": "hard", "what_it_tests": "3 turns: yêu cầu cả kiến thức nền (wikipedia) và tin mới (lookup) → gọi CẢ HAI tool; eval không phụ thuộc thứ tự."}
+    }
+  ]
 }
