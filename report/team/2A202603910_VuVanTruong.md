@@ -111,6 +111,8 @@ Commit của tôi:
 - `d4f844a` — sửa UI OpenUI (bọc `SectionItem` vào `SectionBlock`, sửa theme)
 - `bd960e8` — tạo báo cáo cá nhân này
 - `5291fab` — điền B3/B4 vào báo cáo nhóm, gỡ phần gán công việc của các bạn khác
+- `6d99db3` — sửa 4 điểm trong báo cáo cá nhân này + ghi nguồn thư viện
+- `6b9484a` — chuyển UI chính sang Streamlit (`app.py`), xoá file `docs/UI-DEPLOY.md` do tôi tự soạn nhưng trùng lặp với mục deploy đã có sẵn trong `README.md`
 
 ### 4.2 Số liệu đo được
 
