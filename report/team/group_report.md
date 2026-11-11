@@ -18,7 +18,7 @@ Lệnh chạy UI: `streamlit run app.py` (Cần cài đặt các dependency tron
 
 **Link dùng thử (deploy):**
 
-URL: [Thành viên D điền link URL public từ Cloudflare Tunnel hoặc Vercel]
+URL: [https://nhom4b-research-agent.streamlit.app/](https://nhom4b-research-agent.streamlit.app/)
 
 ### A2. Tool agent có
 
