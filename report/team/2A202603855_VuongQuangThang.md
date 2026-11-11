@@ -15,7 +15,7 @@ tags: []
 
 ## 2. Phần việc phụ trách
 
-Trong nhóm, tôi đảm nhận **Vai trò B (Prompt & Tools Declaration Optimizer)**. Trách nhiệm chính của tôi bao gồm:
+Trong nhóm, đảm nhận **Vai trò B (Prompt & Tools Declaration Optimizer)**. Trách nhiệm chính của tôi bao gồm:
 - Phân tích chi tiết các file log đánh giá định dạng JSON (`runs/*.json`) sau mỗi lần chạy eval (do A thực hiện) để tìm ra nguyên nhân gốc rễ (root cause) của các cases thất bại.
 - Xây dựng giả thuyết tối ưu hóa và trực tiếp chỉnh sửa luật trong `artifacts/system_prompt.md` và `artifacts/tools.yaml`.
 - Đảm bảo agent định tuyến (routing) đúng công cụ, truyền đúng tham số (arguments), không bị ảo giác (hallucination) tự đoán thông tin và tuân thủ ranh giới an toàn (không tự ý gửi bài).
@@ -23,7 +23,7 @@ Trong nhóm, tôi đảm nhận **Vai trò B (Prompt & Tools Declaration Optimiz
 
 ## 3. Đóng góp cụ thể
 
-Tôi đã thực hiện chuỗi vòng lặp tối ưu hóa dựa trên bằng chứng qua 3 phiên bản:
+Đã thực hiện chuỗi vòng lặp tối ưu hóa dựa trên bằng chứng qua 3 phiên bản:
 
 **Vòng 1 (Tối ưu `system_prompt.md`):**
 - *Phát hiện:* Dựa trên log v0, tôi nhận thấy model mắc lỗi `missing_info` do tự đoán bừa tên tài khoản (R10, R11) và lỗi `out_of_scope` do gọi tool vô tội vạ cho câu hỏi toán học/lập trình (R08, R14). Nguyên nhân là do các "bẫy" hướng dẫn ngầm trong prompt gốc.
