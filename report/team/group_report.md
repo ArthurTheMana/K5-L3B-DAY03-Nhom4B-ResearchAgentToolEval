@@ -60,7 +60,7 @@ Lấy từ `starter_v0/artifacts/version_log.csv` và `starter_v0/runs/*.json`. 
 | v0 | baseline | Chạy baseline v0 chưa sửa đổi để lấy số đo gốc. | 0.0 | 0.70 | `runs/v0_B_base_openrouter_20261110T174407112036.json` |
 | v1 | `system_prompt.md` | Nếu xóa lệnh đoán bừa và yêu cầu dùng `clarify` khi thiếu URL/handle, model sẽ ngừng bịa thông tin. | 0.70 | 0.80 | `runs/v1_B_base_openrouter_20261110T180213807365.json` |
 | v2 | `tools.yaml` | Nếu thêm mô tả KHI NÀO DÙNG và ép ranh giới `confirmed=true` cho `send`, model sẽ không tự ý gửi bài. | 0.80 | 0.90 | `runs/v2_B_base_openrouter_20261110T181404462799.json` |
-| v3 | `tools.yaml` | Nếu ép dùng `response_type` (text/yes_no) cho `clarify` và cấm chữ "news" trong query của `lookup`, model sẽ truyền đúng args. | 0.90 | 0.95 | `runs/v3_B_base_openrouter_20261110T183420347940.json` |
+| v3 | `tools.yaml` | Cập nhật quy tắc `clarify.response_type` và kiểm tra lại cách truyền Arguments sau khi nhóm sửa Tool Declaration. | 0.90 | 1.00 | `runs/v3_B_base_openrouter_20261111T002233736709.json` |
 
 ### B2. Failure Analysis
 
