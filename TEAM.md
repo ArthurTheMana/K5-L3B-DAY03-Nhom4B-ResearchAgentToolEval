@@ -8,7 +8,8 @@
 - URL repo, nhánh nộp, commit chốt:
   - URL repo: https://github.com/ArthurTheMana/K5-L3B-DAY03-Nhom4B-ResearchAgentToolEval
   - Nhánh nộp: `main`
-  - Commit chốt:
+  - Commit chốt (trước khi cập nhật TEAM.md lần cuối): 3cca03a02b05066031f6f508c1b31a64220dc5ff
+  - **Public Demo:** https://nhom4b-research-agent.streamlit.app/
 
 ## Thành viên
 
