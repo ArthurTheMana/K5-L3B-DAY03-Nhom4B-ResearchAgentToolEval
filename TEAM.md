@@ -17,7 +17,7 @@
 |   1 | Vương Quang Thắng | 2A202603855 | vuongquangthang0311@gmail.com | vuongquangthang | Prompt & tool declaration — sửa `system_prompt.md` + `tools.yaml` qua v1→v3 |
 |   2 | Nguyễn Tài minh Huy | 2A202603828 | nguyentaiminhhuy831975@gmail.com | ArthurTheMana | Nhóm trưởng — setup, chạy v0–v3, `version_log.csv`, gom bài |
 |   3 | Trần Thị Nhài | 2A202603911 | nhainhinhanh6a@gmail.com | `chanhochust` | Tool mới + unit test — `wikipedia` |
-|   4 | Vũ Văn Trường | 2A202603910 | tini.vu.0@gmail.com | `Sz3RO` | Eval nhóm + UI + demo — 10 eval case của nhóm, UI Streamlit (`app.py`) có streaming token thật, transcript live chat, Phần A + poster |
+|   4 | Vũ Văn Trường | 2A202603910 | 26ai.truongvv@vinuni.edu.vn | `Sz3RO` | Eval nhóm + UI + demo — 10 eval case của nhóm, UI Streamlit (`app.py`) có streaming token thật, transcript live chat, Phần A |
 
 
 ## Cá nhân
@@ -79,6 +79,29 @@ Trần Thị Nhài : [2A202603911_TranThiNhai.md](report/team/2A202603911_TranTh
 - **Kết quả:** Base v0 **14/20 PASS**; Base v3 **20/20 PASS**; Group v3 **10/10 PASS**; Tool Contract **60 PASS**.
 - **File:** `starter_v0/artifacts/version_log.csv`, `starter_v0/runs/`, `report/team/2A202603828_NguyenTaiMinhHuy.md`.
 - **Công cụ AI:** ChatGPT hỗ trợ phân tích yêu cầu, xử lý lỗi môi trường, giải thích Evaluation và tổng hợp báo cáo. Mình trực tiếp chạy lệnh, kiểm tra Terminal Output và đối chiếu Run JSON.
+
+
+## Vũ Văn Trường — 2A202603910
+
+### Phần việc phụ trách
+
+- **Eval nhóm + UI + demo (CP4, CP5):** 10 eval case của nhóm, UI Streamlit cho agent, transcript live chat, Phần A của báo cáo nhóm, B3 và B4 của Phần B.
+
+### Đóng góp cụ thể
+
+- Viết `starter_v0/data/eval_group.json` — 10 case (5 single turn + 5 multi turn) phủ đủ 6 loại `failure_type`, có 3 case route tới tool mới `wikipedia`; viết case dựa trên phân tích 6 case FAIL của run v0 thay vì nghĩ theo cảm tính.
+- Xây `starter_v0/app.py` (UI Streamlit, chạy bằng `streamlit run app.py`): tool loop copy nguyên văn từ `chat.py` nên hành vi trên UI giống hệt hành vi được chấm trong eval; tool `clarify` dừng vòng lặp chờ user trả lời đúng như `chat.py`; mỗi phiên tự ghi transcript cùng định dạng `chat.py`.
+- Thêm `starter_v0/streaming.py` — streaming token thật qua API (`stream=True`) mà **không sửa** `providers/`, nên `chat.py` và `run_eval.py` không đổi; tool call hiện ngay khi agent vừa gọi, câu trả lời stream theo token.
+- Viết test cho UI: `scripts/smoke_streamlit.py` (tool loop, nhánh clarify, thứ tự stream, transcript) và `scripts/test_render_order.py` (thứ tự render + conversation trên DOM thật bằng AppTest); sửa 3 lỗi render (st.rerun làm mất streaming và lật layout, thiếu bubble user, live/lịch sử lệch thứ tự).
+- Chạy Group Evaluation và điền B3; sinh transcript live chat và điền B4; viết Phần A (A1/A2/A3) của `report/team/group_report.md`.
+- Phát hiện hồi quy của v3 (sửa `tools.yaml` 19:52 làm G09 fail: so sánh 2 run chỉ khác tools hash — bản cũ 10/10, bản mới 9/10) và báo nhóm; sau khi bạn Thắng sửa `clarify`, v3 đạt base 20/20 và group 10/10.
+
+### Bằng chứng
+
+- **Commit:** `ee788a5` (UI Streamlit + streaming, xoá UI cũ), `5d6a345` (transcript 3 lượt từ UI), `f8bd6a3` (đồng bộ B3/B4 với run mới), `8d63909` (sửa case G08), `4e3ed92` (chạy group suite + transcript).
+- **Kết quả:** Group v3 **10/10 PASS** (`case_accuracy = 1.00`) với artifact khớp repo; `pytest` **90 passed / 0 failed**; `smoke_streamlit` + `test_render_order` PASS.
+- **File:** `starter_v0/data/eval_group.json`, `starter_v0/app.py`, `starter_v0/streaming.py`, `starter_v0/scripts/smoke_streamlit.py`, `starter_v0/scripts/test_render_order.py`, `starter_v0/transcripts/`, `report/team/2A202603910_VuVanTruong.md`.
+- **Công cụ AI:** DeepSeek Harness (trợ lý AI) hỗ trợ đọc code starter, thiết kế UI, viết code/test/báo cáo. Tôi không tin lời AI — mọi số liệu đều kiểm chứng bằng lệnh thật (`pytest`, `run_eval.py`, test DOM bằng AppTest) và đối chiếu từng dòng với run JSON trước khi đưa vào báo cáo. Chi tiết ở [báo cáo cá nhân](report/team/2A202603910_VuVanTruong.md).
 
 
 
