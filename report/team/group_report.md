@@ -20,6 +20,25 @@ Lệnh chạy UI: `streamlit run app.py` (Cần cài đặt các dependency tron
 
 URL: [https://nhom4b-research-agent.streamlit.app/](https://nhom4b-research-agent.streamlit.app/)
 
+
+**Public UI Demo:**
+
+- **Platform:** Streamlit Community Cloud
+- **Provider:** OpenRouter
+- **Version:** v3
+- **Deployment:** Public
+- **Main file:** `starter_v0/app.py`
+
+**Live Demo Verification:**
+
+Mình đã kiểm tra ứng dụng Research Agent sau khi deploy trên Streamlit Community Cloud. Giao diện hoạt động và Agent đã chọn Wikipedia Tool để xử lý câu hỏi về Alan Turing, sau đó trả lời bằng tiếng Việt.
+
+**Test Question:**
+
+Tra cứu Wikipedia và cho mình biết Alan Turing là ai. Tóm tắt trong 3 câu bằng tiếng Việt.
+
+**Result:** Agent gọi `wikipedia` và trả về câu trả lời phù hợp.
+
 ### A2. Tool agent có
 
 | Tên tool | Làm được gì | Tool mới nhóm thêm? |
