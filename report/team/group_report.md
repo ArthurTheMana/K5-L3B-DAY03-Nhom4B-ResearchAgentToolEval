@@ -39,6 +39,8 @@ Tra cứu Wikipedia và cho mình biết Alan Turing là ai. Tóm tắt trong 3 
 
 **Result:** Agent gọi `wikipedia` và trả về câu trả lời phù hợp.
 
+[Testing](Streamlit_Testing.png)
+
 ### A2. Tool agent có
 
 | Tên tool | Làm được gì | Tool mới nhóm thêm? |
